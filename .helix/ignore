@@ -1,0 +1,4 @@
+*.lock
+data/hosts-porn
+data/hosts-default
+.vscode
