@@ -38,6 +38,9 @@ let
     zig
     quarto
     typst
+    deno
+    nodejs
+    plantuml
   ];
 
   __cli-tools-bat = with pkgs; [
@@ -57,6 +60,7 @@ let
     yazi # file manager
     fd # better find
     lftp # ftp protocols, used for website deployment
+    fswatch
   ];
 
   __cli-tools-emails = with pkgs; [
@@ -193,6 +197,9 @@ let
     obsidian # note app
     audacity # sound app
     sox # record audio in cli
+    discord
+    # vlc
+    localsend
   ];
 
   # ============ ⓘ info only ⓘ ============
@@ -224,6 +231,7 @@ let
     foliate # ebook reader (modern)
     ventoy
     davinci-resolve
+    dorion # discord rust client
   ];
 
   fonts = with pkgs;
@@ -248,7 +256,7 @@ let
   # &⟩ gather all packages, and differentiate between linux and macos
   multi_platform_pkgs = libs ++ devTools ++ cli-tools ++ editors ++ dailyUseApps
     ++ fonts ++ lsp ++ lua_pkgs;
-  linux_pkgs = obs_linux;
+  linux_pkgs = with pkgs; [vlc] ++ obs_linux;
   # ⓘ do not use nix for linux for now
   macos_pkgs = [ ];
 in {

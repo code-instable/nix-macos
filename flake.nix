@@ -25,9 +25,23 @@
     # `nix flake metadata --json . | jq  ".locks.nodes.root.inputs[]" | sed 's/"//g' | fzf`
     # check flake structure
     # `nix flake show github:estin/simple-completion-language-server/main`
+    # github:estin/simple-completion-language-server/
+    # ├───defaultPackage
+    # │   ├───aarch64-darwin: package 'simple-completion-language-server-0.1.0'
     #     => defaultPackage.${system}
     yt-x.url = "github:Benexl/yt-x";
 
+    #  `nix flake show "github:helix-editor/helix/master"`
+    # github:helix-editor/helix/
+    # └───packages
+    #     ├───aarch64-darwin
+    #     │   ├───default: package 'helix-term'
+    #     │   └───helix: package 'helix-term'
+    #     => packages.${system}.helix
+    # helix-source.url = "github:helix-editor/helix/master";
+    # ⓘ making sure not to rebuild helix everyday : get the current master branch's revision
+    #  `nix flake metadata --json "github:helix-editor/helix/master" | jq '.url' | tr -d '\n' | tr -d "\""`
+    helix-source.url = "github:helix-editor/helix/fbc0f956b310284d609f2c00a1f4c0da6bcac165?narHash=sha256-0YzWN%2B%2B/zu1tg7U5MC9H3C2VQo8vEEUbpaFpIpMlZB8%3D";
 
     # ===================================== #
     #  PINNINGS : package specific version  #
@@ -70,6 +84,7 @@
     simple-completion-language-server,
     nix-homebrew,
     yt-x,
+    helix-source,
 
 
     # 🚧 ===      pinning     === 🚧
@@ -98,6 +113,8 @@
         (self: super: {
           #                 command                
           # pkg = nixpkgs-pkg.legacyPackages.${system}.pkg;
+          # ⓘ use helix from the "master" branch from official github repo instead of unstsable nixpkgs version
+          helix = helix-source.packages.${system}.helix;
           #     -------------------------------    
         })
       ];

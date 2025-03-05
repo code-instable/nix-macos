@@ -27,6 +27,7 @@ let
     "shottr"
     "wolfram-engine"
     "firefox"
+    "vlc"
   ];
   # ⓘ App Store apps
   mas = {
