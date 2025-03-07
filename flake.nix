@@ -12,7 +12,13 @@
     # any updates or changes to the main nixpkgs input will automatically be reflected in nix-darwin's nixpkgs, ensuring that they remain in sync without requiring manual adjustments
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Add the input for the simple-completion-language-server flake
+    # □ Add the input for the simple-completion-language-server flake
+    #   □ check flake structure
+    #      `nix flake show github:estin/simple-completion-language-server/main`
+    #       github:estin/simple-completion-language-server/
+    #       ├───defaultPackage
+    #       │   ├───aarch64-darwin: package 'simple-completion-language-server-0.1.0'
+    #           => defaultPackage.${system}
     simple-completion-language-server = {
       url = "github:estin/simple-completion-language-server/main";
       # `follows` is the inheritance syntax within inputs.
@@ -23,12 +29,6 @@
     };
     # ⓘ check if properly added :
     # `nix flake metadata --json . | jq  ".locks.nodes.root.inputs[]" | sed 's/"//g' | fzf`
-    # check flake structure
-    # `nix flake show github:estin/simple-completion-language-server/main`
-    # github:estin/simple-completion-language-server/
-    # ├───defaultPackage
-    # │   ├───aarch64-darwin: package 'simple-completion-language-server-0.1.0'
-    #     => defaultPackage.${system}
     yt-x.url = "github:Benexl/yt-x";
 
     #  `nix flake show "github:helix-editor/helix/master"`
@@ -42,6 +42,19 @@
     # ⓘ making sure not to rebuild helix everyday : get the current master branch's revision
     #  `nix flake metadata --json "github:helix-editor/helix/master" | jq '.url' | tr -d '\n' | tr -d "\""`
     helix-source.url = "github:helix-editor/helix/fbc0f956b310284d609f2c00a1f4c0da6bcac165?narHash=sha256-0YzWN%2B%2B/zu1tg7U5MC9H3C2VQo8vEEUbpaFpIpMlZB8%3D";
+
+    # `nix flake show "github:sioodmy/todo"`
+    # github:sioodmy/todo
+    # ├───apps
+    # │   ├───aarch64-darwin
+    # │   │   └───todo: app
+    # ├───defaultApp
+    # │   ├───aarch64-darwin: app
+    # ├───defaultPackage
+    # │   ├───aarch64-darwin: package 'todo-bin-0.1.0'
+    # (inputs.todo)
+    # => defaultPackage.${system}
+    todo.url = "github:sioodmy/todo";
 
     # ===================================== #
     #  PINNINGS : package specific version  #
@@ -67,8 +80,8 @@
     #  ❌ : https://hydra.nixos.org/build/285057864 (the day I encountered the problem)
     #  ✅ : https://hydra.nixos.org/build/285308175 (1 day afer)
     # 
-    # ✅  Succeeded 	285308175 	2025-01-13 	asymptote-2.95 	aarch64-darwin
-    # ❌  Failed 	    285057864 	2025-01-09 	asymptote-2.95 	aarch64-darwin
+    #  ✅  Succeeded 	285308175 	2025-01-13 	asymptote-2.95 	aarch64-darwin
+    #  ❌  Failed 	    285057864 	2025-01-09 	asymptote-2.95 	aarch64-darwin
     # ——————————————————————————————————————————————————————————————————————————————— #
     # nixpkgs-asymptote.url = "github:NixOS/nixpkgs/aafd5e399e42165b7192b57d1c79e8acf7ae278d";
   };
@@ -78,14 +91,14 @@
 
     # default input repositories
     nix-darwin, 
+    nix-homebrew,
     nixpkgs, 
 
     # github flakes input
     simple-completion-language-server,
-    nix-homebrew,
     yt-x,
     helix-source,
-
+    todo,
 
     # 🚧 ===      pinning     === 🚧
       # nixpkgs-pkg,
@@ -120,17 +133,19 @@
       ];
 
       imports = [
-        # inputs.simple-completion-language-server.defaultPackage.aarch64-darwin
+        # packages
         ./system/system-packages.nix
-        ./system/fonts.nix
-        ./system/macos-environment.nix
         ./system/brew-cask-mas.nix
-        # scripts to run after build
-        ./functions/list-pkgs.nix
-        ./functions/macos-nix-apps-aliases.nix
-        ./functions/pkg-config.nix
-        # custom flakes
+        ./functions/macos-nix-apps-aliases.nix # linking script
+        # fonts
+        ./system/fonts.nix
+        # system settings
+        ./system/macos-environment.nix
         ./functions/java_ver_env_var.nix
+        # scripts to run after build
+        ./functions/activation_scripts.nix
+        # etc files
+        ./functions/list-pkgs.nix
         ./functions/hosts.nix
       ];
 

@@ -31,7 +31,9 @@ in
     # ❌ system.activationScripts.pkg_config_paths.text = create_pkg_config_path_zsh_script;
     # ✅ system.activationScripts.postActivation.text = 
 
-  system.activationScripts.postActivation.text = lib.concatStringsSep "\n" [create_pkg_config_path_zsh_script];
+
+  system.activationScripts.pkg_config-path.text = create_pkg_config_path_zsh_script;
+  # system.activationScripts.postActivation.text = lib.concatStringsSep "\n" [create_pkg_config_path_zsh_script];
 
   environment.etc."pkg_config_cache".text =  let
     PKG_CONFIG_PATH_CONTENT = if builtins.pathExists PKG_CONFIG_PATH_cache

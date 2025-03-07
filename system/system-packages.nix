@@ -105,6 +105,7 @@ let
   __cli-tools-apps = with pkgs; [
     numi # simple calculator within cli, and app
     inputs.yt-x.packages."${system}".default # https://github.com/Benexl/yt-x
+    inputs.todo.defaultPackage.${system}     # https://github.com/sioodmy/todo
     newsraft
     yt-dlp
     terminal-notifier
@@ -198,7 +199,6 @@ let
     audacity # sound app
     sox # record audio in cli
     discord
-    # vlc
     localsend
   ];
 

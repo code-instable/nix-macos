@@ -1,7 +1,5 @@
 {lib,...}:
 let
-
-
     macbook_air_m1_network_services = [
         "USB 10/100/1000 LAN"
         "Thunderbolt Bridge"

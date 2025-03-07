@@ -3,7 +3,8 @@
 
   # among the list of script (names) that can be executed :
   #   - applications
-  # https://github.com/LnL7/nix-darwin/blob/master/modules/system/activation-scripts.nix#L61
+  # executed in the midde of all scripts as a special script
+  # https://github.com/LnL7/nix-darwin/blob/master/modules/system/activation-scripts.nix#L86
   # ⓘ append packages installed via nixpkgs to /Applications/Nix Apps, as symlinks
   system.activationScripts.applications.text = let
     env = pkgs.buildEnv {
