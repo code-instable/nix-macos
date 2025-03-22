@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, lib, ... }:
 let
   libs = with pkgs; [
     pandoc # pdf/html generation
@@ -11,6 +11,9 @@ let
     temurin-jre-bin # ▶ ltex-ls-plus
 
     inkscape # LaTeX svg include
+
+    tesseract
+    # poppler # pdftotext
   ];
 
   editors = with pkgs; [
@@ -41,6 +44,8 @@ let
     deno
     nodejs
     plantuml
+    autoconf
+    inputs.latex2utf8.packages.${system}.lutf # https://github.com/code-instable/latex2utf8
   ];
 
   __cli-tools-bat = with pkgs; [
@@ -106,6 +111,7 @@ let
     numi # simple calculator within cli, and app
     inputs.yt-x.packages."${system}".default # https://github.com/Benexl/yt-x
     inputs.todo.defaultPackage.${system}     # https://github.com/sioodmy/todo
+    inputs.presenterm.packages.${system}.default # https://github.com/mfontanini/presenterm
     newsraft
     yt-dlp
     terminal-notifier
@@ -195,11 +201,14 @@ let
     mas # mac app store cli
     spotify
     scrcpy # mirror android screen
-    obsidian # note app
+    # obsidian # note app
     audacity # sound app
     sox # record audio in cli
     discord
     localsend
+    # typora
+    # calibre
+    mailspring
   ];
 
   # ============ ⓘ info only ⓘ ============
@@ -262,6 +271,11 @@ let
 in {
   # ⓘ allow non open-source packages
   nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+  #    "obsidian"
+  # ];
+
+  environment.variables.QUARTO_R = "/usr/local/bin";
 
   # ?⟩ if on linux
   environment.systemPackages = if pkgs.stdenv.isLinux then

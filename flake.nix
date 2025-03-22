@@ -41,7 +41,16 @@
     # helix-source.url = "github:helix-editor/helix/master";
     # ⓘ making sure not to rebuild helix everyday : get the current master branch's revision
     #  `nix flake metadata --json "github:helix-editor/helix/master" | jq '.url' | tr -d '\n' | tr -d "\""`
-    helix-source.url = "github:helix-editor/helix/fbc0f956b310284d609f2c00a1f4c0da6bcac165?narHash=sha256-0YzWN%2B%2B/zu1tg7U5MC9H3C2VQo8vEEUbpaFpIpMlZB8%3D";
+    #
+    # previous : `github:helix-editor/helix/fbc0f956b310284d609f2c00a1f4c0da6bcac165?narHash=sha256-0YzWN%2B%2B/zu1tg7U5MC9H3C2VQo8vEEUbpaFpIpMlZB8%3D`
+    helix-source.url = "github:helix-editor/helix/3a63e85b6ab204bf0e55d56db63ea02263175424?narHash=sha256-2sKLhRoN5LJG7LrgxlFB/JmTjj7k9Mgu%2BQUL1wpxHOg%3D";
+
+    # `nix flake metadata --json "github:mfontanini/presenterm/master" | jq '.url' | tr -d '\n' | tr -d "\""`
+    # `nix flake show 'github:mfontanini/presenterm/e5486a804305435eb48f656eeba92d8cfb204a02?narHash=sha256-Xlo/aWu6S58efhpC8cdTYkI/Rhsat%2B1h%2BlNICyJmKPQ%3D'`
+    # └───packages
+    #     ├───aarch64-darwin
+    #     │   └───default: package 'presenterm-0.11.0'
+    presenterm.url = "github:mfontanini/presenterm/e5486a804305435eb48f656eeba92d8cfb204a02?narHash=sha256-Xlo/aWu6S58efhpC8cdTYkI/Rhsat%2B1h%2BlNICyJmKPQ%3D";
 
     # `nix flake show "github:sioodmy/todo"`
     # github:sioodmy/todo
@@ -61,6 +70,9 @@
     #               management              #
     # ===================================== #
 
+    # (inputs.latex2utf8)
+    # => packages.${system}.lutf
+    latex2utf8.url = "github:code-instable/latex2utf8";
 
     # ——————————————————————————————————————————————————————————————————————————————— #
     # when dependency error introduced on nix update of nixpkgs-unstable              #
@@ -84,6 +96,17 @@
     #  ❌  Failed 	    285057864 	2025-01-09 	asymptote-2.95 	aarch64-darwin
     # ——————————————————————————————————————————————————————————————————————————————— #
     # nixpkgs-asymptote.url = "github:NixOS/nixpkgs/aafd5e399e42165b7192b57d1c79e8acf7ae278d";
+
+    # ⟩ 2025/03/11 : obsidian problem, ❌ unsolved
+    # ——————————————————————————————————————————————————————————————————————————————— #
+    # https://github.com/NixOS/nixpkgs/issues/388526
+    # https://github.com/NixOS/nixpkgs/commits/nixos-unstable/pkgs/by-name/ob/obsidian/package.nix
+    # ❌ 11f36e699e8122844737012a2272014e67df1a40 (obsidian: 1.8.7 -> 1.8.9)
+    # ✅ 31b5f3ba6361adde901c0c83b02f13212ccdc01f (obsidian: 1.8.4 -> 1.8.7)
+    # ——————————————————————————————————————————————————————————————————————————————— #
+    nixpkgs-obsidian.url = "github:NixOS/nixpkgs/31b5f3ba6361adde901c0c83b02f13212ccdc01f";
+
+    nixpkgs-calibre.url = "github:NixOS/nixpkgs/123d780a895647c7378c98d4a5774bc541df7245";
   };
 
   outputs = { 
@@ -99,9 +122,13 @@
     yt-x,
     helix-source,
     todo,
+    presenterm,
+    latex2utf8,
 
     # 🚧 ===      pinning     === 🚧
       # nixpkgs-pkg,
+      nixpkgs-obsidian,
+      nixpkgs-calibre,
     # 🚧 === ---------------- === 🚧
     ... 
   }@inputs: # make them available as inputs.simple-completion-language-server, inputs.[***], ...
@@ -128,7 +155,9 @@
           # pkg = nixpkgs-pkg.legacyPackages.${system}.pkg;
           # ⓘ use helix from the "master" branch from official github repo instead of unstsable nixpkgs version
           helix = helix-source.packages.${system}.helix;
-          #     -------------------------------    
+          #     -------------------------------   
+          obsidian = nixpkgs-obsidian.legacyPackages.${system}.obsidian ;
+          calibre = nixpkgs-calibre.legacyPackages.${system}.calibre ;
         })
       ];
 

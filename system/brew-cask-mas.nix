@@ -21,6 +21,7 @@ let
   ];
   # ⓘ gui apps
   cask = [
+    # "calibre"
     "ghostty"
     "obs"
     "zed"
@@ -36,6 +37,7 @@ let
     "wolfram-engine"
     "firefox"
     "vlc"
+    "typora"
   ];
   # ⓘ App Store apps
   mas = {
@@ -49,6 +51,7 @@ in
     enable = true;
 
     taps = [
+      "homebrew/bundle"
       "homebrew/bundle"
       "homebrew/services"
       "nikolaeu/numi"
