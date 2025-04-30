@@ -1,4 +1,4 @@
-{lib,...}:
+{lib, config,...}:
 let
     macbook_air_m1_network_services = [
         "USB 10/100/1000 LAN"
@@ -7,16 +7,27 @@ let
     ];
 
     # Helper to create DNS check for each interface
-    dnsChecks = lib.concatStrings (map (interface: ''
-        echo "checking DNS for ${interface}..." >&2
+    dns_check_all_interfaces_script = lib.concatStrings (map (interface: ''
+        printf "\n\nchecking DNS for \033[1;32m${interface}\033[0m..." >&2
         if networksetup -listallnetworkservices | grep -q "${interface}"; then
-          echo "current DNS for ${interface} is $(networksetup -getdnsservers '${interface}')" >&2
+          printf "current DNS for ${interface} is \n%s" "$(networksetup -getdnsservers '${interface}')" >&2
         fi
     '') macbook_air_m1_network_services);
 
+    dns_script = ''
+        printf "\n\033[1;33m⟩ Flushing DNS Cache: \n\033[0m" >&2
+
+        echo "flushing cache..." >&2
+        sudo dscacheutil -flushcache && printf "\n\033[1;32m✔ succeeded\n\033[0m" >&2 || printf "\n\033[1;31m✘ failed\n\033[0m" >&2
+        echo "killing mDNSResponder"
+        sudo killall -HUP mDNSResponder && printf "\n\033[1;32m✔ succeeded\n\033[0m" >&2 || printf "\n\033[1;31m✘ failed\n\033[0m" >&2
+        
+        printf "\n\033[1;33m⟩ Checking DNS values: \n\033[0m" >&2
+        ${dns_check_all_interfaces_script}
+    '';
+
     one_dot_one_porn_block = [
         # 1.1.1.1 Family (porn block)
-        #
         "1.1.1.3"
         "1.0.0.3"
         "2606:4700:4700::1113"
@@ -24,20 +35,24 @@ let
     ];
 in
 {
-
     # System Shell Aliases
-
     environment.shellAliases = {
         exa = "eza --icons";
-        rebuild = "darwin-rebuild switch --flake ~/.config/nix";
-        restart = "source ~/.zshrc";
+        rebuild = "darwin-rebuild switch --flake ${config.users.users.instable.home}/.config/nix --cores 7 --verbose -j 7";
+        restart = "source ${config.users.users.instable.home}/.zshrc";
         yz="yazi";
         marta="open -a Marta";
         m="micromamba";
+        zen="open -a 'Zen Browser'";
+        pdf="zathura";
+        homerebuild="home-manager switch -f ${config.users.users.instable.home}/.config/nix/home.nix";
+        aicode="aichat --model 'github:codestral-2501' --role '%code%'";
+        deepseek="aichat --model 'github:deepseek-r1'";
+        aishell="aichat --model 'github:codestral-2501' --role '%shell%'";
+        ai="aichat --model 'github:mistral-nemo'";
     };
 
     # Settings
-
     system.defaults = {
         dock = {
             autohide = true;
@@ -60,19 +75,15 @@ in
     system.startup.chime = false;
 
     # Networking
-
-    # # 5. Flush DNS cache
-    # `sudo dscacheutil -flushcache`
-    # `sudo killall -HUP mDNSResponder`
     networking.dns = one_dot_one_porn_block;
 
     networking.knownNetworkServices = macbook_air_m1_network_services;
-    system.activationScripts.flushDNS.text =''
-        printf "\nflushing DNS cache...\n" >&2
-        sudo dscacheutil -flushcache
-        sudo killall -HUP mDNSResponder
-        echo "current DNS is $(networksetup -getdnsservers )" >&2
-        ${dnsChecks}
-    '';
+    
+    system.activationScripts.flushDNS.text = dns_script;
 
+    #  `sudo systemsetup -listtimezones | fzf`
+    time.timeZone = "Europe/Brussels";
+
+    # https://mynixos.com/nix-darwin/option/system.defaults.CustomSystemPreferences
+    system.defaults.CustomSystemPreferences = {};
 }

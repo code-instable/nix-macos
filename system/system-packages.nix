@@ -5,19 +5,17 @@ let
     pinentry-tty # for rbw bitwarden tool (dependency)
     readline # used for rpy2
     zlib # compression
-    # java
-    # zulu
+    # ⓘ java
     temurin-jre-bin-11 # ▶ revanced-cli
     temurin-jre-bin # ▶ ltex-ls-plus
-
+    # ⓘ LaTeX packages
     inkscape # LaTeX svg include
-
-    tesseract
+    # ⓘ recognition / OCR
+    # tesseract
     # poppler # pdftotext
   ];
 
   editors = with pkgs; [
-    # neovim                      # sheitan
     vscode # editor of choice
     micro # simple editor in cli
     helix # nvim made simple
@@ -28,7 +26,7 @@ let
     # scriptisto          # run scripts in any language
     micromamba # faster conda
     pkg-config # compiling flags generator (for libraries)
-    # luarocks              # lua package manager
+    luarocks              # lua package manager
     pnpm # faster npm
     lua5_4 # https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/interpreters/lua-5/default.nix
     # https://www.lua.org/versions.html#5.4
@@ -68,14 +66,23 @@ let
     fswatch
   ];
 
+  __yazi-plugins = with pkgs.yaziPlugins; [
+    glow
+    lazygit
+    yatline
+    yatline-catppuccin
+    duckdb
+    chmod
+  ];
+
   __cli-tools-emails = with pkgs; [
-    neomutt # email client
-    mutt-wizard # email setup within cli
-    lynx # cli web browser
-    notmuch
-    abook
-    urlscan
-    gnupg # secure store passwords
+    # neomutt # email client
+    # mutt-wizard # email setup within cli
+    # lynx # cli web browser
+    # notmuch
+    # abook
+    # urlscan
+    # gnupg # secure store passwords
   ];
 
   __cli-tools-shell = with pkgs; [
@@ -90,6 +97,7 @@ let
     fzf # fuzzy finder
     yq-go # better jq
     wget # better curl
+    terminal-notifier
   ];
 
   __cli-tools-dev = with pkgs; [
@@ -119,6 +127,8 @@ let
     tlrc # tldr
     obs-cmd # control obs from command line
     aichat
+    glow # yazi
+    duckdb # yazi
   ];
 
   __cli-tools-passwords = with pkgs; [
@@ -138,12 +148,11 @@ let
       # vivid               # Generate LS_COLORS
     ] ++ __cli-tools-bat ++ __cli-tools-files ++ __cli-tools-passwords
     ++ __cli-tools-apps ++ __cli-tools-img ++ __cli-tools-general_purpose
-    ++ __cli-tools-shell ++ __cli-tools-dev ++ __cli-tools-emails;
+    ++ __cli-tools-shell ++ __cli-tools-dev ++ __cli-tools-emails ++ __yazi-plugins;
 
   lsp = with pkgs; [
     # ⓘ LaTeX
-    # ltex-ls               # LTeX language server
-    ltex-ls-plus # modern LTeX fork / continuation
+    ltex-ls-plus # modern LTeX fork / continuation / LTeX language server
     texlab # latex language server
     bibtex-tidy # formatter
     # ⓘ Nix
@@ -161,10 +170,10 @@ let
     vscode-langservers-extracted # used for helix (vscode-json-language-server)
     # ⓘ Python
     # ruff              # python fast linter
-    ruff-lsp
+    ruff
     pyright
     # ⓘ Lua
-    # lua-language-server
+    lua-language-server
     # ⓘ Go
     gopls
     golangci-lint
@@ -201,46 +210,20 @@ let
     mas # mac app store cli
     spotify
     scrcpy # mirror android screen
-    # obsidian # note app
     audacity # sound app
     sox # record audio in cli
     discord
     localsend
-    # typora
-    # calibre
     mailspring
-  ];
-
-  # ============ ⓘ info only ⓘ ============
-  install_on_brew = with pkgs; [
-    ghostty # is marked as broken, refusing to evaluate
-    kitty # ⚠️ INSTALL BREW VERSION | otherwise : not found when launching from raycast/launcher
-    skimpdf # ⚠️ INSTALL BREW VERSION
-  ];
-  # =======================================
-
-  # ⚠️ obs-studio not available on macos
-  obs_linux = with pkgs; [
-    obs-studio
-    obs-studio-plugins.obs-tuna
-    obs-studio-plugins.input-overlay
-    obs-studio-plugins.obs-composite-blur
-    obs-studio-plugins.obs-gradient-source
-    obs-studio-plugins.waveform
-    obs-studio-plugins.obs-text-pthread
-    obs-studio-plugins.obs-vintage-filter
-    obs-studio-plugins.obs-source-switcher
-  ];
-
-  linux = with pkgs; [
-    wolfram-engine # for macos use brew
-    mathematica
-    firefox
-    ghostty
-    foliate # ebook reader (modern)
-    ventoy
-    davinci-resolve
-    dorion # discord rust client
+    zathura
+    mpv # alternative to vlc
+    obsidian
+    # 🚧 USE HOMEBREW
+    # calibre
+    # typora
+    # ghostty
+    # kitty
+    # skimpdf
   ];
 
   fonts = with pkgs;
@@ -263,24 +246,24 @@ let
   ];
 
   # &⟩ gather all packages, and differentiate between linux and macos
-  multi_platform_pkgs = libs ++ devTools ++ cli-tools ++ editors ++ dailyUseApps
+  system-pkgs = libs ++ devTools ++ cli-tools ++ editors ++ dailyUseApps
     ++ fonts ++ lsp ++ lua_pkgs;
-  linux_pkgs = with pkgs; [vlc] ++ obs_linux;
-  # ⓘ do not use nix for linux for now
-  macos_pkgs = [ ];
+
+  unfree_packages = pkg: builtins.elem (lib.getName pkg) [
+    "numi"
+    "vscode"
+    "aldente"
+    "bartender"
+    "raycast"
+    "spotify"
+    "discord"
+    "obsidian"
+  ];
+
 in {
   # ⓘ allow non open-source packages
-  nixpkgs.config.allowUnfree = true;
-  # nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-  #    "obsidian"
-  # ];
-
+  # nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfreePredicate = unfree_packages;
   environment.variables.QUARTO_R = "/usr/local/bin";
-
-  # ?⟩ if on linux
-  environment.systemPackages = if pkgs.stdenv.isLinux then
-    multi_platform_pkgs ++ linux ++ linux_pkgs
-    # ?⟩ if on macos
-  else
-    multi_platform_pkgs ++ macos_pkgs;
+  environment.systemPackages = system-pkgs;
 }

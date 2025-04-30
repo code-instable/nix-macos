@@ -7,4 +7,4 @@ fd --base-directory "/nix/store/" -j 8 --extension pc |
   each {|path| $"/nix/store/($path)"} |
   str join ":" |
   save --force "data/PKG_CONFIG_PATH-cache.txt"
-  # overwrite the previous file
+  #    ↑ overwrite the previous file

@@ -11,6 +11,5 @@ in
   # Please check there is nothing critical in these files, rename them by adding .before-nix-darwin to the end, and then try again.
   # `sudo mv /etc/hosts /etc/hosts.before-nix-darwin`
 
-
   environment.etc."hosts".text = "${hosts-default}" + "\n" + "${hosts-porn}";
 }

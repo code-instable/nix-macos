@@ -2,22 +2,21 @@
 let
   # ⓘ cli apps and libraries
   brew = [
-    "openjdk"
-    "openjdk@11"
-    "node@23"
-    "tag"
-    # "bitwarden-cli" # | rbw is a better client
-    {name="numi-cli";}
+    {name = "openjdk";}
+    {name = "openjdk@11";}
+    {name = "node@23";}
+    {name = "tag";}
+    {name = "numi-cli";}
     # brew tap ohueter/tap
     # change keyboard layout depending on current keyboard https://github.com/ohueter/autokbisw
     {
       name="autokbisw";
-      # Service `autokbisw` already started, use `brew services restart autokbisw` to restart.
-      # restart_service = "changed";
-
-      # then run : 'brew services start autokbisw'
+      # ⓘ Service `autokbisw` already started, use `brew services restart autokbisw` to restart.
+      restart_service = "changed";
+      # ⓘ then run : 'brew services start autokbisw'
       # start_service = true;
     }    
+    {name="fancy-cat";}
   ];
   # ⓘ gui apps
   cask = [
@@ -51,12 +50,11 @@ in
     enable = true;
 
     taps = [
-      "homebrew/bundle"
-      "homebrew/bundle"
-      "homebrew/services"
       "nikolaeu/numi"
       "ohueter/tap"
       # no longer necessary
+      # "homebrew/bundle"
+      # "homebrew/services"
       # "homebrew/core"
       # "homebrew/cask"
     ];
