@@ -9,14 +9,18 @@ let
     {name = "numi-cli";}
     # brew tap ohueter/tap
     # change keyboard layout depending on current keyboard https://github.com/ohueter/autokbisw
+    # troubleshoot
+    # Preferences > Security & Privacy > Privacy > Input Monitoring: remove autokbisw
+    # System Settings > Keyboard > Input sources > Edit: disable `Automatically switch to a document's input source`
+    #  `brew services restart autokbisw ; launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.autokbisw.plist; launchctl load ~/Library/LaunchAgents/homebrew.mxcl.autokbisw.plist;`
     {
       name="autokbisw";
       # ⓘ Service `autokbisw` already started, use `brew services restart autokbisw` to restart.
-      restart_service = "changed";
+      # restart_service = "changed";
       # ⓘ then run : 'brew services start autokbisw'
-      # start_service = true;
+      start_service = true;
     }    
-    {name="fancy-cat";}
+    # {name="fancy-cat";}
   ];
   # ⓘ gui apps
   cask = [
@@ -28,15 +32,14 @@ let
     "amethyst"
     "marta"
     "kitty"          
-    "ghostty"
     "skim"
     "github" # github desktop
     "keyboardcleantool"
     "shottr"
     "wolfram-engine"
-    "firefox"
     "vlc"
     "typora"
+    "karabiner-elements"
   ];
   # ⓘ App Store apps
   mas = {
