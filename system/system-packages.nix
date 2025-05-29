@@ -175,6 +175,7 @@ let
     zinit # zsh plugin manager
     nushell # data processing within cli
     zellij # terminal multiplexer
+    zjstatus
   ] ++ __nushell-plugins;
 
   __cli-tools-general_purpose = with pkgs; [
@@ -345,13 +346,19 @@ let
     "discord"
     "obsidian"
   ];
-
+  
 in {
   # ⓘ allow non open-source packages
   # nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowUnfreePredicate = unfree_packages;
   environment.variables.QUARTO_R = "/usr/local/bin";
   environment.systemPackages = system-pkgs;
+
+  environment.etc."zellij-plugins-paths.yml".text = ''
+  zjstatus:
+    path: ${pkgs.zjstatus}/bin/zjstatus.wasm
+  '';
+  
   # generate a yaml for the path of the plugins
   environment.etc."nushell-plugins-paths.yml".text = ''
   ${
