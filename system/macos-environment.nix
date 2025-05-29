@@ -7,14 +7,16 @@ let
     ];
 
     # Helper to create DNS check for each interface
-    dns_check_all_interfaces_script = lib.concatStrings (map (interface: ''
+    dns_check_all_interfaces_script = lib.concatStrings (map (interface: /* zsh */
+    ''
         printf "\n\nchecking DNS for \033[1;32m${interface}\033[0m..." >&2
         if networksetup -listallnetworkservices | grep -q "${interface}"; then
           printf "current DNS for ${interface} is \n%s" "$(networksetup -getdnsservers '${interface}')" >&2
         fi
     '') macbook_air_m1_network_services);
 
-    dns_script = ''
+    dns_script = /* zsh */
+    ''
         printf "\n\033[1;33m⟩ Flushing DNS Cache: \n\033[0m" >&2
 
         echo "flushing cache..." >&2

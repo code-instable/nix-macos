@@ -24,7 +24,8 @@
       # points to $HOME/.config/obs-studio
       symlink_location = "${userHome}/.config/obs-studio";
     };
-  in pkgs.lib.mkForce ''
+  in pkgs.lib.mkForce /* zsh */
+  ''
     printf "\n\033[1;33m⟩ Post-build symlink scripts: \n\033[0m" >&2
     # $⟩ 1) Set up applications.
     # $ ===============================================

@@ -3,7 +3,8 @@
 {pkgs, lib, config, ...}:
 let
   # ⓘ note: _script in the name allows for syntax highlight
-  xdg_open_symlink_script = ''
+  xdg_open_symlink_script = /* zsh */
+  ''
     printf "\n\033[1;33m⟩ symlinking open -> xdg-open: \n\033[0m" >&2
     printf "creating 'xdg-open' (linux) symlink for 'open' (macos) command in '/usr/local/bin' directory, prevents zathura from crashing on link open" >&2
     ln -s "/usr/bin/open" "/usr/local/bin/xdg-open" && printf "\n\033[1;32m✔ created symlink successfully.\n\033[0m" >&2 || printf "\n\033[1;31m✘ symlink creation failed.\n\033[0m" >&2
