@@ -1,6 +1,6 @@
 { pkgs, ...}:
 {
-    fonts.packages = [
+    fonts.packages = with pkgs; [
         # (
         #     # ⓘ install the following nerd fonts onto the system
         #     pkgs.nerdfonts.override {
@@ -10,11 +10,14 @@
         #     }
         # )
         # use instead :
-        pkgs.nerd-fonts.jetbrains-mono
-        pkgs.nerd-fonts.fira-code
-        pkgs.nerd-fonts.fira-mono
-        pkgs.lmodern
-        pkgs.lmmath
-        pkgs.xits-math
+        nerd-fonts.jetbrains-mono
+        nerd-fonts.fira-code
+        nerd-fonts.fira-mono
+        lmodern
+        lmmath
+        xits-math
+        fira-math
+        julia-mono
+        newcomputermodern
     ];
 }
