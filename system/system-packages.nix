@@ -13,6 +13,10 @@ let
     # ⓘ recognition / OCR
     # tesseract
     # poppler # pdftotext
+    djvulibre # allows djvu to be read in zathura : https://pwmt.org/projects/zathura-djvu
+    libspectre # allows ps to be read in zathura : https://pwmt.org/projects/zathura-ps/
+    libarchive # allows comic book support in zathura : https://pwmt.org/projects/zathura-cb/
+    mupdf # zathura pdf engine: https://pwmt.org/projects/zathura-pdf-mupdf/
   ];
 
   editors = with pkgs; [
