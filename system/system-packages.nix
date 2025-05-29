@@ -161,11 +161,21 @@ let
     ]))
   ];
 
+  __nushell-plugins = with pkgs.nushellPlugins; [
+    formats
+    # semver
+    query
+    units
+    net
+    skim
+    polars
+  ];
+
   __cli-tools-shell = with pkgs; [
     zinit # zsh plugin manager
     nushell # data processing within cli
     zellij # terminal multiplexer
-  ];
+  ] ++ __nushell-plugins;
 
   __cli-tools-general_purpose = with pkgs; [
     ripgrep # better grep
@@ -342,4 +352,16 @@ in {
   nixpkgs.config.allowUnfreePredicate = unfree_packages;
   environment.variables.QUARTO_R = "/usr/local/bin";
   environment.systemPackages = system-pkgs;
+  # generate a yaml for the path of the plugins
+  environment.etc."nushell-plugins-paths.yml".text = ''
+  ${
+    lib.concatStringsSep "\n" (map (plugin: "${plugin.meta.mainProgram}:\n\t- path: ${plugin}/bin/${plugin.meta.mainProgram}") __nushell-plugins)
+  }  
+  '';
+
+  environment.etc."nushell-plugins-paths.nu".text = ''
+  ${
+    lib.concatStringsSep "\n" (map (plugin: "plugin add ${plugin}/bin/${plugin.meta.mainProgram}") __nushell-plugins)
+  }  
+  '';
 }
