@@ -55,6 +55,7 @@ in
     };
 
     # Settings
+    # needs `system.primaryUser` — to apply user-level settings from root (darwin-rebuild)
     system.defaults = {
         dock = {
             autohide = true;

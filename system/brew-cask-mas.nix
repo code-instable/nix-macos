@@ -47,7 +47,7 @@ let
 in
 {
   homebrew = {
-    enable = true;
+    enable = true; # needs `system.primaryUser` — to apply user-level settings from root (darwin-rebuild)
 
     taps = [
       "nikolaeu/numi"
