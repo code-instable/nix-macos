@@ -39,6 +39,7 @@ let
     "wolfram-engine"
     "vlc"
     "typora"
+    "dorion"
     "karabiner-elements"
   ];
   # ⓘ App Store apps
@@ -55,6 +56,7 @@ in
     taps = [
       "nikolaeu/numi"
       "ohueter/tap"
+      "psharma04/dorion"
       # no longer necessary
       # "homebrew/bundle"
       # "homebrew/services"

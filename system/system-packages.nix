@@ -330,6 +330,7 @@ let
     mpv # alternative to vlc
     obsidian
     wezterm
+    # dorion
     # 🚧 USE HOMEBREW
     # calibre
     # typora
@@ -362,6 +363,7 @@ let
     ++ fonts ++ lsp ++ lua_pkgs ++ __R ++ __python;
 
   unfree_packages = pkg: builtins.elem (lib.getName pkg) [
+    "dorion"
     "numi"
     "vscode"
     "aldente"

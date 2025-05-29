@@ -27,6 +27,11 @@ let
     printf "creating 'xdg-open' (linux) symlink for 'open' (macos) command in '/usr/local/bin' directory, prevents zathura from crashing on link open" >&2
     ln -s "/usr/bin/open" "/usr/local/bin/xdg-open" && printf "\n\033[1;32m✔ created symlink successfully.\n\033[0m" >&2 || printf "\n\033[1;31m✘ symlink creation failed.\n\033[0m" >&2
   '';
+
+  dorion_is_damaged-script = /* zsh */
+  ''
+  sudo xattr -rd com.apple.quarantine /Applications/Dorion.app
+  '';
 in
 {
   imports = [
@@ -36,6 +41,7 @@ in
   system.activationScripts = {
       xdg_open_symlink.text = xdg_open_symlink_script;
       update_vscode_extensions.text = update_vscode_extensions-script;
+      dorion_is_damaged.text = dorion_is_damaged-script;
   };
   
 
@@ -53,6 +59,7 @@ in
       # system/macos-environment.nix
       flushDNS.text
       # update_vscode_extensions.text
+      dorion_is_damaged.text
     ];
   in lib.concatStringsSep "\n" post_activation_scripts;
 }
