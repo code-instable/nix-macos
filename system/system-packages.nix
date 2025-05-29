@@ -48,6 +48,7 @@ let
     plantuml
     autoconf
     inputs.latex2utf8.packages.${system}.lutf # https://github.com/code-instable/latex2utf8
+    stow # manage dotfiles via symlinks
   ];
 
   __cli-tools-bat = with pkgs; [
@@ -68,6 +69,7 @@ let
     fd # better find
     lftp # ftp protocols, used for website deployment
     fswatch
+    darwin.trash
   ];
 
   __yazi-plugins = with pkgs.yaziPlugins; [
@@ -216,6 +218,28 @@ let
     aichat
     glow # yazi
     duckdb # yazi
+    # new
+    fend
+    dipc
+    nix-melt
+    nix-init
+    mprocs
+    kbt
+    grex
+    melody
+    jnv # interactive jq filter
+    skim
+    fclones
+    rm-improved
+    # netscanner
+    dust
+    procs
+    atuin
+    kalker
+    sd
+    kanata
+    # karabiner-elements
+    ncspot
   ];
 
   __cli-tools-passwords = with pkgs; [
@@ -305,6 +329,7 @@ let
     zathura
     mpv # alternative to vlc
     obsidian
+    wezterm
     # 🚧 USE HOMEBREW
     # calibre
     # typora
