@@ -45,6 +45,9 @@ let
   r_packages = with pkgs.rPackages; [
     data_table
     rix
+    codetools # rix dependence
+    curl # rix dependence
+    jsonlite # rix dependence
     glue
     orthogonalsplinebasis
     mgcv
@@ -65,9 +68,19 @@ let
   ] ++ [adaptiveFTS fdadapt direg somebm];
 
   r_with_packages = pkgs.rWrapper.override{ packages = r_packages; };
+  # https://github.com/NixOS/nixpkgs/blob/master/pkgs/top-level/all-packages.nix#L10151-L10175 
+  radian_with_packages = pkgs.radianWrapper.override {
+    # use the 3.13 version explicitly
+    radian = pkgs.python313Packages.radian;
+    packages = r_packages;
+    wrapR = true;
+  };
 in 
 {
-  environment.systemPackages = [ r_with_packages ];
+  environment.systemPackages = [
+    # r_with_packages
+    radian_with_packages
+  ];
 
   environment.etc."R_LIBS".text = builtins.readFile (pkgs.runCommand "r-lib-paths" {} ''
   ${r_with_packages}/bin/Rscript -e 'cat(paste0(.libPaths(), collapse = ":"), sep = "\n")' > $out
