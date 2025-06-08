@@ -4,7 +4,7 @@ let
   brew = [
     {name = "openjdk";}
     {name = "openjdk@11";}
-    {name = "node@23";}
+    {name = "node";}
     {name = "tag";}
     {name = "numi-cli";}
     # brew tap ohueter/tap
