@@ -113,7 +113,7 @@
     # ▶ then copy `Revision`                                                          #
     # ——————————————————————————————————————————————————————————————————————————————— #
     # nixpkgs-<pinned_package>.url = "github:NixOS/nixpkgs/<revision";
-    nixpkgs-spotify.url = "github:NixOS/nixpkgs/afa43e1383d4d604ed3575bf95b3905354a9a51b";
+    # nixpkgs-spotify.url = "github:NixOS/nixpkgs/afa43e1383d4d604ed3575bf95b3905354a9a51b";
 
   };
 
@@ -128,7 +128,7 @@
 
     # 🚧 ===      pinning     === 🚧
     # nixpkgs-pkg,
-    nixpkgs-spotify,
+    # nixpkgs-spotify,
     # 🚧 === ---------------- === 🚧
     ...
     }@inputs: # make them available as inputs.simple-completion-language-server, inputs.[***], ...
@@ -176,12 +176,12 @@
             }).unfree_pkg;
             ``` */
             # ⓘ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ⓘ
-            spotify = (import nixpkgs-spotify {
-              inherit system;
-              config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
-                "spotify"
-              ];
-            }).spotify;
+            # spotify = (import nixpkgs-spotify {
+            #   inherit system;
+            #   config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
+            #     "spotify"
+            #   ];
+            # }).spotify;
           })
           # ⓘ Register Github Flakes as nixpkgs packages (pkgs.non_nixpkgs_pkg)
           # https://github.com/dj95/zjstatus/wiki/1-‐-Installation#nix-flakes
