@@ -56,11 +56,7 @@ in
     taps = [
       "nikolaeu/numi"
       "psharma04/dorion"
-      # no longer necessary
-      # "homebrew/bundle"
-      # "homebrew/services"
-      # "homebrew/core"
-      # "homebrew/cask"
+      # no longer necessary-"homebrew/bundle"-"homebrew/services"-"homebrew/core"-"homebrew/cask"
       # "ohueter/tap" # autokbisw
     ];
 
