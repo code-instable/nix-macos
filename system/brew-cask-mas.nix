@@ -13,13 +13,13 @@ let
     # Preferences > Security & Privacy > Privacy > Input Monitoring: remove autokbisw
     # System Settings > Keyboard > Input sources > Edit: disable `Automatically switch to a document's input source`
     #  `brew services restart autokbisw ; launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.autokbisw.plist; launchctl load ~/Library/LaunchAgents/homebrew.mxcl.autokbisw.plist;`
-    {
-      name="autokbisw";
-      # ⓘ Service `autokbisw` already started, use `brew services restart autokbisw` to restart.
-      # restart_service = "changed";
-      # ⓘ then run : 'brew services start autokbisw'
-      start_service = true;
-    }    
+    # {
+    #   name="autokbisw";
+    #   # ⓘ Service `autokbisw` already started, use `brew services restart autokbisw` to restart.
+    #   # restart_service = "changed";
+    #   # ⓘ then run : 'brew services start autokbisw'
+    #   start_service = true;
+    # }    
     # {name="fancy-cat";}
   ];
   # ⓘ gui apps
@@ -55,13 +55,13 @@ in
 
     taps = [
       "nikolaeu/numi"
-      "ohueter/tap"
       "psharma04/dorion"
       # no longer necessary
       # "homebrew/bundle"
       # "homebrew/services"
       # "homebrew/core"
       # "homebrew/cask"
+      # "ohueter/tap" # autokbisw
     ];
 
     # ⓘ brew casks (gui apps)
