@@ -1,4 +1,4 @@
-{config, pkgs, lib, ...}:
+{...}:
 let
   # note : relative to THIS FILE, not the system flake's location
   hosts-default = builtins.readFile ../data/hosts-default;

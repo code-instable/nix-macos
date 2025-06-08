@@ -1,4 +1,4 @@
-{config, lib, pkgs, ...}:
+{pkgs, ...}:
 let 
   fdadapt = (pkgs.rPackages.buildRPackage {
     name = "FDAdapt";

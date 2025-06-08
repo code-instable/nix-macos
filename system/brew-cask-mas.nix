@@ -1,4 +1,4 @@
-{pkgs, config, ...}:
+{...}:
 let
   # ⓘ cli apps and libraries
   brew = [

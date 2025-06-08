@@ -1,4 +1,4 @@
-{config, lib, pkgs, ...}:
+{pkgs, ...}:
 let
   JAVA_HOME_21 = pkgs.temurin-jre-bin;
   JAVA_HOME_11 = pkgs.temurin-jre-bin-11;

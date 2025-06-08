@@ -1,4 +1,4 @@
-{config, pkgs, lib, ...}:
+{config, pkgs, ...}:
 let
   PKG_CONFIG_PATH_cache = "${config.users.users.instable.home}/.PKG_CONFIG_PATH-cache.txt";
   

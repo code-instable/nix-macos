@@ -1,4 +1,4 @@
-{config, pkgs, lib, ...}:
+{config, pkgs, ...}:
 {
   #  `bat /etc/current-system-packages`
   # > view all installed packages

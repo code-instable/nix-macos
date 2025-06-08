@@ -1,4 +1,4 @@
-{pkgs, config, lib, ...}:
+{...}:
 let 
   lock-false = {
     Value = false;
