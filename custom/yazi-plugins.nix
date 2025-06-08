@@ -16,7 +16,8 @@
           name = "yazi-setup";
           buildInputs = [ pkgs.yazi pkgs.yarn ];
 
-          buildCommand = ''
+          buildCommand = /* zsh */
+          ''
             # ensure the plugins directory exists, otherwise create it (else it will error)
             mkdir -p "$HOME/.config/yazi/plugins"
 
