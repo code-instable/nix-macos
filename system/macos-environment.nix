@@ -39,19 +39,19 @@ in
 {
     # System Shell Aliases
     environment.shellAliases = {
-        exa = "eza --icons";
-        rebuild = "darwin-rebuild switch --flake ${config.users.users.instable.home}/.config/nix --cores 7 --verbose -j 7";
-        restart = "source ${config.users.users.instable.home}/.zshrc";
-        yz="yazi";
-        marta="open -a Marta";
-        m="micromamba";
-        zen="open -a 'Zen Browser'";
-        pdf="zathura";
-        homerebuild="home-manager switch -f ${config.users.users.instable.home}/.config/nix/home.nix";
-        aicode="aichat --model 'github:codestral-2501' --role '%code%'";
-        deepseek="aichat --model 'github:deepseek-r1'";
-        aishell="aichat --model 'github:codestral-2501' --role '%shell%'";
-        ai="aichat --model 'github:mistral-nemo'";
+        exa          =/*zsh*/''eza --icons'';
+        rebuild      =/*zsh*/''darwin-rebuild switch --flake ${config.users.users.instable.home}/.config/nix --cores 7 --verbose -j 7'';
+        restart      =/*zsh*/''source ${config.users.users.instable.home}/.zshrc'';
+        yz           =/*zsh*/''yazi'';
+        marta        =/*zsh*/''open -a Marta'';
+        m            =/*zsh*/''micromamba'';
+        zen          =/*zsh*/''open -a "Zen Browser"'';
+        pdf          =/*zsh*/''zathura'';
+        homerebuild  =/*zsh*/''home-manager switch -f ${config.users.users.instable.home}/.config/nix/home.nix'';
+        aicode       =/*zsh*/''aichat --model "github:codestral-2501" --role "%code%"'';
+        deepseek     =/*zsh*/''aichat --model "github:deepseek-r1"'';
+        aishell      =/*zsh*/''aichat --model "github:codestral-2501" --role "%shell%"'';
+        ai           =/*zsh*/''aichat --model "github:mistral-nemo"'';
     };
 
     # Settings
