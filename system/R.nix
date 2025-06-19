@@ -71,7 +71,7 @@ let
   # https://github.com/NixOS/nixpkgs/blob/master/pkgs/top-level/all-packages.nix#L10151-L10175 
   radian_with_packages = pkgs.radianWrapper.override {
     # use the 3.13 version explicitly
-    radian = pkgs.python313Packages.radian;
+    # radian = pkgs.python313Packages.radian;
     packages = r_packages;
     wrapR = true;
   };

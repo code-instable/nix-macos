@@ -49,6 +49,7 @@ let
     autoconf
     inputs.latex2utf8.packages.${system}.lutf # https://github.com/code-instable/latex2utf8
     stow # manage dotfiles via symlinks
+    pixi # modular mojo package manager
   ];
 
   __cli-tools-bat = with pkgs; [
@@ -93,7 +94,7 @@ let
 
   __python = with pkgs; [
     (python313.withPackages(pypkgs: with pypkgs ; [
-      radian
+      # radian
     ]))
   ];
 
