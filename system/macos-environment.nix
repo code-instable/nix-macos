@@ -35,6 +35,14 @@ let
         "2606:4700:4700::1113"
         "2606:4700:4700::1003"
     ];
+
+    one_dot_one = [
+        # 1.1.1.1 Family (porn block)
+        "1.1.1.1"
+        "1.0.0.1"
+        "2606:4700:4700::1111"
+        "2606:4700:4700::1001"
+    ];
 in
 {
     # System Shell Aliases
@@ -78,7 +86,7 @@ in
     system.startup.chime = false;
 
     # Networking
-    networking.dns = one_dot_one_porn_block;
+    networking.dns = one_dot_one;
 
     networking.knownNetworkServices = macbook_air_m1_network_services;
     
