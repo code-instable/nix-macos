@@ -97,4 +97,74 @@ in
 
     # https://mynixos.com/nix-darwin/option/system.defaults.CustomSystemPreferences
     system.defaults.CustomSystemPreferences = {};
+
+    # https://gist.github.com/j8/8ef9b6e39449cbe2069a
+    # ⓘ animate opening and closing of windows and popovers
+    system.defaults.NSGlobalDomain.NSAutomaticWindowAnimationsEnabled = false;
+    # ⓘ speed of the Mission Control animations
+    system.defaults.dock.expose-animation-duration = 0.0;
+    # ⓘ speed of window resizing
+    system.defaults.NSGlobalDomain.NSWindowResizeTime = 0.001;
+
+    
+    # enable smooth scrolling
+    system.defaults.NSGlobalDomain.NSScrollAnimationEnabled = true;
+    # ⓘ autohide the menu bar
+    system.defaults.NSGlobalDomain._HIHideMenuBar = true;
+
+    # ⓘ use 24-hour
+    system.defaults.NSGlobalDomain.AppleICUForce24HourTime = true;
+
+    # ⓘ swiping left or right with two fingers to navigate backward or forward
+    system.defaults.NSGlobalDomain.AppleEnableMouseSwipeNavigateWithScrolls = false;
+    system.defaults.NSGlobalDomain.AppleEnableSwipeNavigateWithScrolls = false;
+
+    # ⓘ press-and-hold feature
+    system.defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
+
+    # ⓘ show all file extensions in Finder
+    system.defaults.NSGlobalDomain.AppleShowAllExtensions = true ;
+
+    # ⓘ how long you must hold down the key before it starts repeating
+    # system.defaults.NSGlobalDomain.InitialKeyRepeat = ;
+    # ⓘ how fast it repeats once it starts
+    # system.defaults.NSGlobalDomain.KeyRepeat = ;
+
+    system.defaults.NSGlobalDomain.NSAutomaticCapitalizationEnabled = false;
+    system.defaults.NSGlobalDomain.NSAutomaticInlinePredictionEnabled = false;
+    system.defaults.NSGlobalDomain.NSAutomaticPeriodSubstitutionEnabled = false;
+    system.defaults.NSGlobalDomain.NSAutomaticQuoteSubstitutionEnabled = true;
+    system.defaults.NSGlobalDomain.NSAutomaticSpellingCorrectionEnabled = false;
+    # ⓘ automatic termination of inactive apps
+    system.defaults.NSGlobalDomain.NSDisableAutomaticTermination = false;
+
+    system.defaults.screencapture.target = "clipboard";
+    system.defaults.screencapture.show-thumbnail = true;
+    system.defaults.screencapture.disable-shadow = true;
+    # behavior of fn/🌐 key
+    system.defaults.hitoolbox.AppleFnUsageType = "Do Nothing";
+    # ⓘ quarantine for downloaded applications
+    system.defaults.LaunchServices.LSQuarantine = false;
+    
+    # environment.systemPath = [
+        # "/Users/instable/micromamba/envs/latest/bin"
+        # "/opt/homebrew/bin"
+        # "/opt/homebrew/sbin"
+        # "/Users/instable/micromamba/condabin"
+        # "/Users/instable/.data/zinit/polaris/bin"
+        # "/Users/instable/.nix-profile/bin"
+        # "/etc/profiles/per-user/instable/bin"
+        # "/run/current-system/sw/bin"
+        # "/nix/var/nix/profiles/default/bin"
+        # "/usr/local/bin"
+        # "/usr/bin"
+        # "/bin"
+        # "/usr/sbin"
+        # "/sbin"
+        # "/Users/instable/.modular/bin"
+        # "/Users/instable/.local/bin"
+        # "/Users/instable/.modular/bin"
+        # "/Users/instable/.local/bin"
+    # ];
+    
 }
