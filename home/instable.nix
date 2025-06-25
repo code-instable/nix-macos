@@ -36,5 +36,17 @@ nixpkgs = {
       allowUnfreePredicate = _: true;
     };
   };
-  
+
+  home.file.".Rprofile".text = /* R */
+  ''
+    # This file is sourced at the start of R sessions
+    options(browser="open --background -a 'Zen Browser'")
+    # HTTPGD
+    # size: zen browser with sideberry
+    options(httpgd.width = 1735)
+    options(httpgd.height = 1045)
+    # options(httpgd.port = 8080)
+    # httpgd::hgd(silent = TRUE)
+    # httpgd::hgd_browse()
+  '';
 }
