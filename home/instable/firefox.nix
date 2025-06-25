@@ -1,4 +1,4 @@
-{...}:
+{pkgs, ...}:
 let 
   lock-false = {
     Value = false;
@@ -144,5 +144,6 @@ in
     enable = true;
     languagePacks = [ "fr" "en-US" ];
     policies = firefox-policies;
+    package = pkgs.librewolf;
   };
 }
