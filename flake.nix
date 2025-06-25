@@ -42,7 +42,7 @@
     #  `printf '%s' $(nix flake metadata --json "github:helix-editor/helix/master" | yq '.url')`
     helix-source = {
       #  `printf "url = %s;" $(nix flake metadata --json "github:helix-editor/helix/master" | jq '.url')`
-      url = "github:helix-editor/helix/171dfc60e5cda8f9fb6c4f662872f35bbe864a53?narHash=sha256-ps4Fa8cq%2Bq13Kb2nj9uxXjIGvsSRBUfcxW5CgquxiQI%3D";
+      url = "github:helix-editor/helix/c3c4895179d4bc5a00e22fdf129d41c1af96226a?narHash=sha256-pbF4oz%2BHZE/rXsm9YOOA9aV/QnwTvc0zHDTpkaHpYK4%3D";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # `printf '%s' $(nix flake metadata --json "github:mfontanini/presenterm/master" | yq '.url')`
