@@ -175,6 +175,7 @@ let
     kanata
     # karabiner-elements
     ncspot
+    httrack
   ];
 
   __cli-tools-passwords = with pkgs; [
