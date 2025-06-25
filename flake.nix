@@ -81,6 +81,8 @@
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixpkgs-firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
     # ══════════════════════════════════════╗
     #  PINNINGS : package specific version  ║
     #               management              ║
@@ -275,6 +277,7 @@
             # home-manager configuration
             home-manager.darwinModules.home-manager
             {
+              nixpkgs.overlays = [ inputs.nixpkgs-firefox-darwin.overlay ];
               home-manager.useGlobalPkgs = false;
               home-manager.useUserPackages = true;
               home-manager.sharedModules =
