@@ -41,13 +41,50 @@ let
         caret data_table fastmatrix MASS Rcpp Rdpack RcppArmadillo;
     } ++ [ pkgs.llvmPackages.openmp ];
   });
+  httpgd = (pkgs.rPackages.buildRPackage {
+    name = "httpgd";
+    src = pkgs.fetchgit {
+      url = "https://github.com/nx10/httpgd";
+      rev = "dd6ed3a687a2d7327bb28ca46725a0a203eb2a19";
+      sha256 = "sha256-vs6MTdVJXhTdzPXKqQR+qu1KbhF+vfyzZXIrFsuKMtU=";
+    };
+    propagatedBuildInputs = builtins.attrValues {
+      inherit (pkgs.rPackages)
+      /*
+      # https://github.com/nx10/httpgd/blob/master/DESCRIPTION
+      LinkingTo: 
+        unigd,
+        cpp11 (>= 0.2.4),
+        AsioHeaders (>= 1.22.1)
+      */
+      unigd 
+      AsioHeaders
+      cpp11
+      ;
+    };
+  });
+  deconvolve = (pkgs.rPackages.buildRPackage {
+      name = "deconvolve";
+      src = pkgs.fetchgit {
+        url = "https://github.com/timothyhyndman/deconvolve";
+        rev = "05a18c54a2a70563c51179db33ef55ef39bf4b5f";
+        sha256 = "sha256-wC2LTzIEHZeVXRqYLkoHSHIwre04nhdBw9HhI/cIgN8=";
+      };
+      propagatedBuildInputs = builtins.attrValues {
+        inherit (pkgs.rPackages) 
+          NlcOptim
+          ggplot2
+          foreach
+          doParallel;
+      };
+    });
 
-  r_packages = with pkgs.rPackages; [
+  r_packages =
+  # with pkgs.rPackages; [
+  builtins.attrValues {
+    inherit (pkgs.rPackages) 
     data_table
     rix
-    codetools # rix dependence
-    curl # rix dependence
-    jsonlite # rix dependence
     glue
     orthogonalsplinebasis
     mgcv
@@ -65,7 +102,33 @@ let
     doParallel
     foreach
     pracma
-  ] ++ [adaptiveFTS fdadapt direg somebm];
+    ;
+    }
+    # 𝐑𝐔𝐍𝐓𝐈𝐌𝐄 dependencies
+    ++ builtins.attrValues {
+    inherit (pkgs.rPackages)
+    # rix
+    /*
+    # https://github.com/ropensci/rix/blob/main/DESCRIPTION
+    Imports:
+      codetools,
+      curl,
+      jsonlite,
+      sys,  # default lib
+      utils # default lib
+    */
+    codetools # rix dependence
+    curl # rix dependence
+    jsonlite # rix dependence
+    # httpgd
+    /*
+    # https://github.com/nx10/httpgd/blob/master/DESCRIPTION
+    Imports: 
+      unigd
+    */
+    unigd # httpgd dependence
+    ;
+    } ++ [adaptiveFTS fdadapt direg somebm httpgd deconvolve];
 
   r_with_packages = pkgs.rWrapper.override{ packages = r_packages; };
   # https://github.com/NixOS/nixpkgs/blob/master/pkgs/top-level/all-packages.nix#L10151-L10175 
@@ -89,7 +152,8 @@ in
   # setup radian to use the r_with_packages
   # $XDG_CONFIG_HOME/radian/profile
 
-  environment.etc."radian-profile".text = /* R */
+  # a workaround when no radian wrapper
+  environment.etc."radian-profile-no_nix_wrapper".text = /* R */
   ''
     options(radian.highlight_matching_bracket = TRUE)
     options(radian.history_search_ignore_case = TRUE)
@@ -101,8 +165,29 @@ in
     options(repos = c(CRAN = "https://cran.fr.r-project.org"))
   '';
 
+  environment.etc."radian-profile".text = /* R */
+  ''
+    options(radian.highlight_matching_bracket = TRUE)
+    options(radian.history_search_ignore_case = TRUE)
+  '';
+
+  environment.etc.".Rprofile".text = /* R */
+  ''
+    # This file is sourced at the start of R sessions
+    options(browser="open -a 'Zen Browser'")
+    # HTTPGD
+    options(httpgd.port = 8080)
+    # size: zen browser with sideberry
+    options(httpgd.width = 1735)
+    options(httpgd.height = 1045)
+    # httpgd::hgd(silent = TRUE)
+    # httpgd::hgd_browse()
+  '';
+
+
   environment.shellAliases = {
-     rnix = "radian --r-binary ${r_with_packages}/bin/R --profile /etc/radian-profile";
-     rsave = "radian --r-binary ${r_with_packages}/bin/R --save --profile /etc/radian-profile";
+     rnix = "radian --r-binary ${r_with_packages}/bin/R --profile /etc/radian-profile-no_nix_wrapper";
+     rsave = "radian --r-binary ${r_with_packages}/bin/R --save --profile /etc/radian-profile-no_nix_wrapper";
+     r = "radian --profile /etc/radian-profile";
   };
 }
