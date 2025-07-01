@@ -125,7 +125,7 @@
   outputs = { self,
 
     # default input repositories
-    nix-darwin, nix-homebrew, nixpkgs, home-manager, mac-app-util,
+    nix-darwin, nix-homebrew, nixpkgs, nixpkgs-darwin, home-manager, mac-app-util,
 
     # github flakes input
     simple-completion-language-server, yt-x, helix-source, todo, presenterm
