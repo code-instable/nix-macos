@@ -100,10 +100,10 @@ let
 
   __nushell-plugins = with pkgs.nushellPlugins; [
     formats
-    # semver
+    # semver # pas dispo sur mac
     query
-    units
-    net
+    # units # broken
+    # net
     skim
     polars
   ];
