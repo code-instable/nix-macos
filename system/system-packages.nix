@@ -41,7 +41,7 @@ let
     rustc
     android-tools
     zig
-    quarto
+    # quarto
     typst
     deno
     nodejs

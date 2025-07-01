@@ -1,6 +1,17 @@
-{pkgs, ...}:
-let 
-  fdadapt = (pkgs.rPackages.buildRPackage {
+{pkgs, lib, ...}:
+let
+  pkgs-rstats_on_nix = import (fetchTarball
+    {
+      name = "rstats-on-nix-2025-04-11";
+      url = "https://github.com/rstats-on-nix/nixpkgs/archive/2025-04-11.tar.gz";
+      # sha256 = lib.fakeSha256;
+      sha256 = "sha256:0y60qsq1mwdfi8bhlbw8zbwxkifgyki1bx1pfv1sxp2v6wk6r1s1";
+    }
+  ) {
+    system = pkgs.system;
+  };
+  
+  fdadapt = (pkgs-rstats_on_nix.rPackages.buildRPackage {
     name = "FDAdapt";
     src = pkgs.fetchgit {
       url = "https://github.com/sunnywang93/FDAdapt";
@@ -8,28 +19,28 @@ let
       sha256 = "sha256-uOM+SGozp+QFlXJ7LdLwsFL80LswU2aIO3m6sHHpcLk=";
     };
     propagatedBuildInputs = builtins.attrValues {
-      inherit (pkgs.rPackages) abind fdapace glmnet interp MASS np pracma purrr;
+      inherit (pkgs-rstats_on_nix.rPackages) abind fdapace glmnet interp MASS np pracma purrr;
     };
   });
-  direg = (pkgs.rPackages.buildRPackage {
+  direg = (pkgs-rstats_on_nix.rPackages.buildRPackage {
     name = "direg";
     src = pkgs.fetchgit {
       url = "https://github.com/sunnywang93/direg";
       rev = "2dec6f98f39b0e4c177a3f2043f5cfa2533c8dcf";
       sha256 = "sha256-sMp+75md4tCVBRWszJXqBnM3uS5/SsjgWubkN93wzF0=";
     };
-    propagatedBuildInputs = builtins.attrValues { inherit (pkgs.rPackages) ; };
+    propagatedBuildInputs = builtins.attrValues { inherit (pkgs-rstats_on_nix.rPackages) ; };
   });
-  somebm = (pkgs.rPackages.buildRPackage {
+  somebm = (pkgs-rstats_on_nix.rPackages.buildRPackage {
     name = "somebm";
     src = pkgs.fetchgit {
       url = "https://github.com/cran/somebm";
       rev = "03584b24dee8081f08a0cde456edcc8419aba494";
       sha256 = "sha256-QqSk/bmbDpquHJfHqimCcJcj/4QKdqQLBLqKCRZzn6s=";
     };
-    propagatedBuildInputs = builtins.attrValues { inherit (pkgs.rPackages) ; };
+    propagatedBuildInputs = builtins.attrValues { inherit (pkgs-rstats_on_nix.rPackages) ; };
   });
-  adaptiveFTS = (pkgs.rPackages.buildRPackage {
+  adaptiveFTS = (pkgs-rstats_on_nix.rPackages.buildRPackage {
     name = "adaptiveFTS";
     src = pkgs.fetchgit {
       url = "https://github.com/hmaissoro/adaptiveFTS";
@@ -37,11 +48,11 @@ let
       sha256 = "sha256-YMt5kSnDoAELTfcb25DkI3Ba3fAwznbgDer2mxJdnRM=";
     };
     propagatedBuildInputs = builtins.attrValues {
-      inherit (pkgs.rPackages)
+      inherit (pkgs-rstats_on_nix.rPackages)
         caret data_table fastmatrix MASS Rcpp Rdpack RcppArmadillo;
     } ++ [ pkgs.llvmPackages.openmp ];
   });
-  httpgd = (pkgs.rPackages.buildRPackage {
+  httpgd = (pkgs-rstats_on_nix.rPackages.buildRPackage {
     name = "httpgd";
     src = pkgs.fetchgit {
       url = "https://github.com/nx10/httpgd";
@@ -49,7 +60,7 @@ let
       sha256 = "sha256-vs6MTdVJXhTdzPXKqQR+qu1KbhF+vfyzZXIrFsuKMtU=";
     };
     propagatedBuildInputs = builtins.attrValues {
-      inherit (pkgs.rPackages)
+      inherit (pkgs-rstats_on_nix.rPackages)
       /*
       # https://github.com/nx10/httpgd/blob/master/DESCRIPTION
       LinkingTo: 
@@ -63,7 +74,7 @@ let
       ;
     };
   });
-  deconvolve = (pkgs.rPackages.buildRPackage {
+  deconvolve = (pkgs-rstats_on_nix.rPackages.buildRPackage {
       name = "deconvolve";
       src = pkgs.fetchgit {
         url = "https://github.com/timothyhyndman/deconvolve";
@@ -71,7 +82,7 @@ let
         sha256 = "sha256-wC2LTzIEHZeVXRqYLkoHSHIwre04nhdBw9HhI/cIgN8=";
       };
       propagatedBuildInputs = builtins.attrValues {
-        inherit (pkgs.rPackages) 
+        inherit (pkgs-rstats_on_nix.rPackages) 
           NlcOptim
           ggplot2
           foreach
@@ -80,9 +91,9 @@ let
     });
 
   r_packages =
-  # with pkgs.rPackages; [
+  # with pkgs-rstats_on_nix.rPackages; [
   builtins.attrValues {
-    inherit (pkgs.rPackages) 
+    inherit (pkgs-rstats_on_nix.rPackages) 
     data_table
     rix
     glue
@@ -106,9 +117,8 @@ let
     }
     # 𝐑𝐔𝐍𝐓𝐈𝐌𝐄 dependencies
     ++ builtins.attrValues {
-    inherit (pkgs.rPackages)
-    # rix
-    /*
+    inherit (pkgs-rstats_on_nix.rPackages)
+    /* RIX:
     # https://github.com/ropensci/rix/blob/main/DESCRIPTION
     Imports:
       codetools,
@@ -117,22 +127,29 @@ let
       sys,  # default lib
       utils # default lib
     */
-    codetools # rix dependence
-    curl # rix dependence
-    jsonlite # rix dependence
-    # httpgd
-    /*
+    codetools  # rix dependence
+    curl       # rix dependence
+    jsonlite   # rix dependence
+    /* HTTPGD:
     # https://github.com/nx10/httpgd/blob/master/DESCRIPTION
     Imports: 
       unigd
     */
     unigd # httpgd dependence
     ;
-    } ++ [adaptiveFTS fdadapt direg somebm httpgd deconvolve];
+    } ++ [
+      adaptiveFTS
+      fdadapt
+      direg
+      somebm
+      httpgd
+      deconvolve
+    ];
 
-  r_with_packages = pkgs.rWrapper.override{ packages = r_packages; };
+  r_with_packages = pkgs-rstats_on_nix.rWrapper.override{ packages = r_packages; };
+  
   # https://github.com/NixOS/nixpkgs/blob/master/pkgs/top-level/all-packages.nix#L10151-L10175 
-  radian_with_packages = pkgs.radianWrapper.override {
+  radian_with_packages = pkgs-rstats_on_nix.radianWrapper.override {
     # use the 3.13 version explicitly
     # radian = pkgs.python313Packages.radian;
     packages = r_packages;
@@ -141,8 +158,9 @@ let
 in 
 {
   environment.systemPackages = [
-    # r_with_packages
+    r_with_packages
     radian_with_packages
+    pkgs-rstats_on_nix.quarto
   ];
 
   environment.etc."R_LIBS".text = builtins.readFile (pkgs.runCommand "r-lib-paths" {} ''

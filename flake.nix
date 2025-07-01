@@ -116,7 +116,7 @@
     # ——————————————————————————————————————————————————————————————————————————————— #
     # nixpkgs-<pinned_package>.url = "github:NixOS/nixpkgs/<revision";
     # nixpkgs-spotify.url = "github:NixOS/nixpkgs/afa43e1383d4d604ed3575bf95b3905354a9a51b";
-
+    nixpkgs-R-4_5_0.url = "github:NixOS/nixpkgs/c32298d71b5dc1fe4405e997aabb3908c0ca639d";
   };
 
   outputs = { self,
@@ -131,6 +131,7 @@
     # 🚧 ===      pinning     === 🚧
     # nixpkgs-pkg,
     # nixpkgs-spotify,
+    nixpkgs-R-4_5_0,
     # 🚧 === ---------------- === 🚧
     ...
     }@inputs: # make them available as inputs.simple-completion-language-server, inputs.[***], ...
@@ -164,6 +165,12 @@
             # ⓘ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ⓘ
             # quarto = nixpkgs-quarto.legacyPackages.${system}.quarto;
 
+            # R 4.5.0 with radian
+            R = nixpkgs-R-4_5_0.legacyPackages.${system}.R;
+            rWrapper = nixpkgs-R-4_5_0.legacyPackages.${system}.rWrapper;
+            rstudioServerWrapper = nixpkgs-R-4_5_0.legacyPackages.${system}.rstudioServerWrapper;
+            radianWrapper = nixpkgs-R-4_5_0.legacyPackages.${system}.radianWrapper;
+            radian = nixpkgs-R-4_5_0.legacyPackages.${system}.radian;
             # ⓘ UNFREE PACKAGES FROM PINNED NIXPKGS ⓘ
             # When using a pinned/older nixpkgs version for unfree packages, you need to:
             # 1. Import the specific nixpkgs with explicit unfree configuration
