@@ -5,6 +5,9 @@
   # `nix flake metadata --json . | jq  ".locks.nodes.root.inputs[]" | sed 's/"//g' | fzf`
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-release.url = "github:NixOS/nixpkgs/release-25.05";
+    nixpkgs-nixos.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       # ⓘ `follows` attribute tells Nix that the nixpkgs input within nix-darwin should follow or track the same version as the top-level nixpkgs input defined above | any updates or changes to the main nixpkgs input will automatically be reflected in nix-darwin's nixpkgs, ensuring that they remain in sync without requiring manual adjustments
