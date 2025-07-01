@@ -26,7 +26,8 @@ let
   ];
 
   devTools = with pkgs; [
-    texliveFull # latex
+    # texliveFull # latex
+    texliveSmall
     # scriptisto          # run scripts in any language
     micromamba # faster conda
     pkg-config # compiling flags generator (for libraries)

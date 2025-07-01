@@ -167,7 +167,11 @@
             # pkg = nixpkgs-pkg.legacyPackages.${system}.pkg;
             # ⓘ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ⓘ
             # quarto = nixpkgs-quarto.legacyPackages.${system}.quarto;
-
+            texliveFull = nixpkgs-darwin.legacyPackages.${system}.texliveFull;
+            texliveSmall = nixpkgs-darwin.legacyPackages.${system}.texliveSmall;
+            texliveBasic = nixpkgs-darwin.legacyPackages.${system}.texliveBasic;
+            texliveMedium = nixpkgs-darwin.legacyPackages.${system}.texliveMedium;
+            texliveMinimal = nixpkgs-darwin.legacyPackages.${system}.texliveMinimal;
             # R 4.5.0 with radian
             R = nixpkgs-R-4_5_0.legacyPackages.${system}.R;
             rWrapper = nixpkgs-R-4_5_0.legacyPackages.${system}.rWrapper;
