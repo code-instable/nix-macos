@@ -2,10 +2,10 @@
 let
   pkgs-rstats_on_nix = import (fetchTarball
     {
-      name = "rstats-on-nix-2025-04-11";
-      url = "https://github.com/rstats-on-nix/nixpkgs/archive/2025-04-11.tar.gz";
+      name = "rstats-on-nix-2025-07-03";
+      url = "https://github.com/rstats-on-nix/nixpkgs/archive/2025-07-03.tar.gz";
       # sha256 = lib.fakeSha256;
-      sha256 = "sha256:0y60qsq1mwdfi8bhlbw8zbwxkifgyki1bx1pfv1sxp2v6wk6r1s1";
+      sha256 = "sha256:04kf1ryj56wkxkc3qz27d0m8isa251wpvl21vh5lyfxd40agkrk4";
     }
   ) {
     system = pkgs.system;
@@ -105,7 +105,10 @@ let
     fda_usc
     fdapace
     xtable
+    sampling
+    SamplingStrata
     survey
+    surveysd # Calculate point estimates and their standard errors in complex household surveys using bootstrap replicates
     gustave
     progress
     reticulate
@@ -113,6 +116,7 @@ let
     doParallel
     foreach
     pracma
+  
     ;
     }
     # 𝐑𝐔𝐍𝐓𝐈𝐌𝐄 dependencies
