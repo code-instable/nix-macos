@@ -29,7 +29,7 @@
       url = "github:estin/simple-completion-language-server/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     yt-x.url = "github:Benexl/yt-x";
 
     #  `nix flake show "github:helix-editor/helix/master"`
@@ -39,13 +39,13 @@
     #     │   ├───default: package 'helix-term'
     #     │   └───helix: package 'helix-term'
     #     => packages.${system}.helix
-    # 
+    #
     # ⓘ making sure not to rebuild helix everyday : get the current master branch's revision
     # get the latest commit from the master branch: (yq ommits quotes ", jq display them)
     #  `printf '%s' $(nix flake metadata --json "github:helix-editor/helix/master" | yq '.url')`
     helix-source = {
       #  `printf "url = %s;" $(nix flake metadata --json "github:helix-editor/helix/master" | jq '.url')`
-      url = "github:helix-editor/helix/6a090471a800b1001bdfd2b6e0b710c1cd439a4e?narHash=sha256-pdYjEgdVYEerzxxmrM0GJAFGZ%2BJ50NRD0rtDZ16SuTM%3D";
+      url = "github:helix-editor/helix/6fd1efd1c29f4c0dbdab3a82d961fd5456e0cb1c?narHash=sha256-a434OTO7gxtAnDE6/1JWSf4in3ed24bEYJb0dUSZipE%3D";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # `printf '%s' $(nix flake metadata --json "github:mfontanini/presenterm/master" | yq '.url')`
@@ -122,187 +122,200 @@
     nixpkgs-R-4_5_0.url = "github:NixOS/nixpkgs/c32298d71b5dc1fe4405e997aabb3908c0ca639d";
   };
 
-  outputs = { self,
-
+  outputs = {
+    self,
     # default input repositories
-    nix-darwin, nix-homebrew, nixpkgs, nixpkgs-darwin, home-manager, mac-app-util,
-
+    nix-darwin,
+    nix-homebrew,
+    nixpkgs,
+    nixpkgs-darwin,
+    home-manager,
+    mac-app-util,
     # github flakes input
-    simple-completion-language-server, yt-x, helix-source, todo, presenterm
-    , latex2utf8, zellij-plugin-zjstatus, zen-browser-unofficial,
-
+    simple-completion-language-server,
+    yt-x,
+    helix-source,
+    todo,
+    presenterm,
+    latex2utf8,
+    zellij-plugin-zjstatus,
+    zen-browser-unofficial,
     # 🚧 ===      pinning     === 🚧
     # nixpkgs-pkg,
     # nixpkgs-spotify,
     nixpkgs-R-4_5_0,
     # 🚧 === ---------------- === 🚧
     ...
-    }@inputs: # make them available as inputs.simple-completion-language-server, inputs.[***], ...
-    let
-      # get system automatically
-      # useful for source.defaultPackage.${system}
-      system = if builtins ? currentSystem then
-        builtins.currentSystem
-      else
-        "aarch64-darwin";
+  } @ inputs:
+  # make them available as inputs.simple-completion-language-server, inputs.[***], ...
+  let
+    # get system automatically
+    # useful for source.defaultPackage.${system}
+    system =
+      if builtins ? currentSystem
+      then builtins.currentSystem
+      else "aarch64-darwin";
 
-      configuration = { pkgs, config, ... }: {
-        # Takes the flake inputs (from @inputs)
-        # Makes them available to all modules as `inputs`
-        # Allows accessing flake inputs in any module file
-        _module.args.inputs = inputs; # → used for `system/system-packages.nix`, especially for flakes from other githubs than nixpkgs
+    configuration = {
+      pkgs,
+      config,
+      ...
+    }: {
+      # Takes the flake inputs (from @inputs)
+      # Makes them available to all modules as `inputs`
+      # Allows accessing flake inputs in any module file
+      _module.args.inputs = inputs; # → used for `system/system-packages.nix`, especially for flakes from other githubs than nixpkgs
 
-        # override the packages for which we need a downgrade
-        # https://nixos.wiki/wiki/Overlays
-        nixpkgs.overlays = [
-          # Overlay: Use `self` and `super` to express
-          # the inheritance relationship
-          (self: super:
-          {
-            #                 command                
-            # ⓘ use helix from the "master" branch from official github repo instead of unstsable nixpkgs version while stille referring to it as `pkgs.helix`
-            helix = helix-source.packages.${system}.helix;
-            #     -------------------------------   
-            # ⓘ FREE PACKAGES FROM PINNED NIXPKGS ⓘ
-            # pkg = nixpkgs-pkg.legacyPackages.${system}.pkg;
-            # ⓘ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ⓘ
-            # quarto = nixpkgs-quarto.legacyPackages.${system}.quarto;
-            texliveFull = nixpkgs-darwin.legacyPackages.${system}.texliveFull;
-            texliveSmall = nixpkgs-darwin.legacyPackages.${system}.texliveSmall;
-            texliveBasic = nixpkgs-darwin.legacyPackages.${system}.texliveBasic;
-            texliveMedium = nixpkgs-darwin.legacyPackages.${system}.texliveMedium;
-            texliveMinimal = nixpkgs-darwin.legacyPackages.${system}.texliveMinimal;
-            # R 4.5.0 with radian
-            R = nixpkgs-R-4_5_0.legacyPackages.${system}.R;
-            rWrapper = nixpkgs-R-4_5_0.legacyPackages.${system}.rWrapper;
-            rstudioServerWrapper = nixpkgs-R-4_5_0.legacyPackages.${system}.rstudioServerWrapper;
-            radianWrapper = nixpkgs-R-4_5_0.legacyPackages.${system}.radianWrapper;
-            radian = nixpkgs-R-4_5_0.legacyPackages.${system}.radian;
-            # ⓘ UNFREE PACKAGES FROM PINNED NIXPKGS ⓘ
-            # When using a pinned/older nixpkgs version for unfree packages, you need to:
-            # 1. Import the specific nixpkgs with explicit unfree configuration
-            # 2. The allowUnfreePredicate must be applied to the pinned nixpkgs instance
-            # This is because overlays don't inherit the main nixpkgs unfree settings, which requires more verbose syntax
-            /* ```nix
-            unfree_pkg = (import nixpkgs-pkg {
-              inherit system;
-              config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
-                "unfree_pkg"
-              ];
-            }).unfree_pkg;
-            ``` */
-            # ⓘ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ⓘ
-            # spotify = (import nixpkgs-spotify {
-            #   inherit system;
-            #   config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
-            #     "spotify"
-            #   ];
-            # }).spotify;
-          })
-          # ⓘ Register Github Flakes as nixpkgs packages (pkgs.non_nixpkgs_pkg)
-          # https://github.com/dj95/zjstatus/wiki/1-‐-Installation#nix-flakes
-          (final: prev: {
-            zjstatus = zellij-plugin-zjstatus.packages.${prev.system}.default;
-          })
-        ];
+      # override the packages for which we need a downgrade
+      # https://nixos.wiki/wiki/Overlays
+      nixpkgs.overlays = [
+        # Overlay: Use `self` and `super` to express
+        # the inheritance relationship
+        (self: super: {
+          #                 command               
+          # ⓘ use helix from the "master" branch from official github repo instead of unstsable nixpkgs version while stille referring to it as `pkgs.helix`
+          helix = helix-source.packages.${system}.helix;
+          #     -------------------------------   
+          # ⓘ FREE PACKAGES FROM PINNED NIXPKGS ⓘ
+          # pkg = nixpkgs-pkg.legacyPackages.${system}.pkg;
+          # ⓘ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ⓘ
+          # quarto = nixpkgs-quarto.legacyPackages.${system}.quarto;
+          texliveFull = nixpkgs-darwin.legacyPackages.${system}.texliveFull;
+          texliveSmall = nixpkgs-darwin.legacyPackages.${system}.texliveSmall;
+          texliveBasic = nixpkgs-darwin.legacyPackages.${system}.texliveBasic;
+          texliveMedium = nixpkgs-darwin.legacyPackages.${system}.texliveMedium;
+          texliveMinimal = nixpkgs-darwin.legacyPackages.${system}.texliveMinimal;
+          # R 4.5.0 with radian
+          R = nixpkgs-R-4_5_0.legacyPackages.${system}.R;
+          rWrapper = nixpkgs-R-4_5_0.legacyPackages.${system}.rWrapper;
+          rstudioServerWrapper = nixpkgs-R-4_5_0.legacyPackages.${system}.rstudioServerWrapper;
+          radianWrapper = nixpkgs-R-4_5_0.legacyPackages.${system}.radianWrapper;
+          radian = nixpkgs-R-4_5_0.legacyPackages.${system}.radian;
+          # ⓘ UNFREE PACKAGES FROM PINNED NIXPKGS ⓘ
+          # When using a pinned/older nixpkgs version for unfree packages, you need to:
+          # 1. Import the specific nixpkgs with explicit unfree configuration
+          # 2. The allowUnfreePredicate must be applied to the pinned nixpkgs instance
+          # This is because overlays don't inherit the main nixpkgs unfree settings, which requires more verbose syntax
+          /*
+             ```nix
+          unfree_pkg = (import nixpkgs-pkg {
+            inherit system;
+            config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
+              "unfree_pkg"
+            ];
+          }).unfree_pkg;
+          ```
+          */
+          # ⓘ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ⓘ
+          # spotify = (import nixpkgs-spotify {
+          #   inherit system;
+          #   config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
+          #     "spotify"
+          #   ];
+          # }).spotify;
+        })
+        # ⓘ Register Github Flakes as nixpkgs packages (pkgs.non_nixpkgs_pkg)
+        # https://github.com/dj95/zjstatus/wiki/1-‐-Installation#nix-flakes
+        (final: prev: {
+          zjstatus = zellij-plugin-zjstatus.packages.${prev.system}.default;
+        })
+      ];
 
-        imports = [
-          # packages
-          ./system/system-packages.nix
-          ./system/brew-cask-mas.nix
-          ./functions/macos-nix-apps-aliases.nix # linking script
-          # fonts
-          ./system/fonts.nix
-          # system settings
-          ./system/macos-environment.nix
-          ./functions/java_ver_env_var.nix
-          # scripts to run after build
-          ./functions/activation_scripts.nix
-          # etc files
-          ./functions/list-pkgs.nix
-          # ./functions/hosts.nix
-        ];
+      imports = [
+        # packages
+        ./system/system-packages.nix
+        ./system/brew-cask-mas.nix
+        ./functions/macos-nix-apps-aliases.nix # linking script
+        # fonts
+        ./system/fonts.nix
+        # system settings
+        ./system/macos-environment.nix
+        ./functions/java_ver_env_var.nix
+        # scripts to run after build
+        ./functions/activation_scripts.nix
+        # etc files
+        ./functions/list-pkgs.nix
+        # ./functions/hosts.nix
+      ];
 
-        nix = {
-          # ⓘ ensures that the Nix daemon service is active, enabling secure and efficient multi-user package management on your system
-          # error:
-          # Failed assertions:
-          # - The option definition `services.nix-daemon.enable' in `<unknown-file>' no longer has any effect; please remove it.
-          # nix-darwin now manages nix-daemon unconditionally when
-          # `nix.enable` is on.
-          # services.nix-daemon.enable = true;
-          enable = true;
-          gc.automatic = true;
-          optimise.automatic = true;
-          settings = {
-            # ⓘ This line allows you to use the `nix` command with flakes.
-            experimental-features = [ "nix-command" "flakes" ];
-          };
-        };
-        # ⓘ This line ensures that system.configurationRevision is set to the most accurate revision of your configuration:
-        #   1. Uses `self.rev` if the flake is at a clean Git commit.
-        #   2. Falls back to `self.dirtyRev` if there are uncommitted changes.
-        #   3. Defaults to `null` if no revision information is available.
-        system.configurationRevision = self.rev or self.dirtyRev or null;
-        
-        # ⓘ M1 processor binaries
-        nixpkgs.hostPlatform = "aarch64-darwin";
-
-        # ⚠️ Used for backwards compatibility, please read the changelog before changing.
-        system.stateVersion = 5;
-
-        # ⓘ this makes sudo also work with Touch ID
-        security.pam.services.sudo_local.touchIdAuth = true;
-
-        # ~ Users
-        system.primaryUser = "instable";
-        # &⟩ instable
-        # ⓘ defines the user instable
-        users.users.instable = {
-          home = "/Users/instable";
-          name = "instable";
-        };
-        environment.variables = {
-          XDG_CONFIG_HOME = "/Users/instable/.config";
-          XDG_CACHE_HOME = "/Users/instable/.cache";
-          XDG_DATA_HOME = "/Users/instable/.data";
+      nix = {
+        # ⓘ ensures that the Nix daemon service is active, enabling secure and efficient multi-user package management on your system
+        # error:
+        # Failed assertions:
+        # - The option definition `services.nix-daemon.enable' in `<unknown-file>' no longer has any effect; please remove it.
+        # nix-darwin now manages nix-daemon unconditionally when
+        # `nix.enable` is on.
+        # services.nix-daemon.enable = true;
+        enable = true;
+        gc.automatic = true;
+        optimise.automatic = true;
+        settings = {
+          # ⓘ This line allows you to use the `nix` command with flakes.
+          experimental-features = ["nix-command" "flakes"];
         };
       };
-    in {
-      # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#instables-MacBook-Air
-      # $ darwin-rebuild switch --flake ~/.config/nix
-      darwinConfigurations."instables-MacBook-Air" =
-        nix-darwin.lib.darwinSystem {
-          modules = [
-            # system configuration
-            configuration
-            # homebrew configuration
-            nix-homebrew.darwinModules.nix-homebrew
-            {
-              nix-homebrew = {
-                enable = true;
-                # ⓘ brew needs Rosetta as built for x86_64
-                #   softwareupdate --install-rosetta
-                enableRosetta = true;
-                user = "instable";
-              };
-            }
-            # home-manager configuration
-            home-manager.darwinModules.home-manager
-            {
-              nixpkgs.overlays = [ inputs.nixpkgs-firefox-darwin.overlay ];
-              home-manager.useGlobalPkgs = false;
-              home-manager.useUserPackages = true;
-              home-manager.sharedModules =
-                [ mac-app-util.homeManagerModules.default ];
-              # user specific
-              home-manager.users.instable = import ./home/instable.nix;
-            }
-          ];
-        };
+      # ⓘ This line ensures that system.configurationRevision is set to the most accurate revision of your configuration:
+      #   1. Uses `self.rev` if the flake is at a clean Git commit.
+      #   2. Falls back to `self.dirtyRev` if there are uncommitted changes.
+      #   3. Defaults to `null` if no revision information is available.
+      system.configurationRevision = self.rev or self.dirtyRev or null;
 
-      # Expose the package set, including overlays, for convenience.
-      darwinPackages = self.darwinConfigurations."instables-MacBook-Air".pkgs;
+      # ⓘ M1 processor binaries
+      nixpkgs.hostPlatform = "aarch64-darwin";
+
+      # ⚠️ Used for backwards compatibility, please read the changelog before changing.
+      system.stateVersion = 5;
+
+      # ⓘ this makes sudo also work with Touch ID
+      security.pam.services.sudo_local.touchIdAuth = true;
+
+      # ~ Users
+      system.primaryUser = "instable";
+      # &⟩ instable
+      # ⓘ defines the user instable
+      users.users.instable = {
+        home = "/Users/instable";
+        name = "instable";
+      };
+      environment.variables = {
+        XDG_CONFIG_HOME = "/Users/instable/.config";
+        XDG_CACHE_HOME = "/Users/instable/.cache";
+        XDG_DATA_HOME = "/Users/instable/.data";
+      };
     };
+  in {
+    # Build darwin flake using:
+    # $ darwin-rebuild build --flake .#instables-MacBook-Air
+    # $ darwin-rebuild switch --flake ~/.config/nix
+    darwinConfigurations."instables-MacBook-Air" = nix-darwin.lib.darwinSystem {
+      modules = [
+        # system configuration
+        configuration
+        # homebrew configuration
+        nix-homebrew.darwinModules.nix-homebrew
+        {
+          nix-homebrew = {
+            enable = true;
+            # ⓘ brew needs Rosetta as built for x86_64
+            #   softwareupdate --install-rosetta
+            enableRosetta = true;
+            user = "instable";
+          };
+        }
+        # home-manager configuration
+        home-manager.darwinModules.home-manager
+        {
+          nixpkgs.overlays = [inputs.nixpkgs-firefox-darwin.overlay];
+          home-manager.useGlobalPkgs = false;
+          home-manager.useUserPackages = true;
+          home-manager.sharedModules = [mac-app-util.homeManagerModules.default];
+          # user specific
+          home-manager.users.instable = import ./home/instable.nix;
+        }
+      ];
+    };
+
+    # Expose the package set, including overlays, for convenience.
+    darwinPackages = self.darwinConfigurations."instables-MacBook-Air".pkgs;
+  };
 }
