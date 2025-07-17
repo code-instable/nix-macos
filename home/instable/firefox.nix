@@ -1,5 +1,4 @@
-{pkgs, ...}:
-let 
+{pkgs, ...}: let
   lock-false = {
     Value = false;
     Status = "locked";
@@ -10,35 +9,32 @@ let
   };
 
   # function returning the install url of a given extension
-  install_url = { name }:
-    "https://addons.mozilla.org/firefox/downloads/latest/${name}/latest.xpi";
-  extension_dict = { name }: {
-    install_url = install_url { name = name; };
+  install_url = {name}: "https://addons.mozilla.org/firefox/downloads/latest/${name}/latest.xpi";
+  extension_dict = {name}: {
+    install_url = install_url {name = name;};
     installation_mode = "force_installed";
   };
 
   # extensions
-  ublock = extension_dict { name = "ublock-origin"; };
-  privacy_badger = extension_dict { name = "privacy-badger17"; };
-  bitwarden = extension_dict { name = "bitwarden-password-manager"; };
-  language_tool = extension_dict { name = "languagetool"; };
-  consent_o_matic = extension_dict { name = "consent-o-matic"; };
-  dark_reader = extension_dict { name = "darkreader"; };
-  dearrow = extension_dict { name = "dearrow"; };
-  enhancer_for_youtube = extension_dict { name = "enhancer-for-youtube"; };
-  pocket_tube = extension_dict { name = "youtube-subscription-groups"; };
-  return_youtube_dislike = extension_dict { name = "return-youtube-dislikes"; };
-  web_archives = extension_dict { name = "view-page-archives"; };
-  sponsor_block_youtube = extension_dict { name = "sponsorblock"; };
-  sidebery = extension_dict { name = "sidebery"; };
-  vimium-c = extension_dict { name = "vimium-c"; };
-  nook = extension_dict { name = "nook"; };
-  animalese_typing = extension_dict { name = "animalese-typing"; };
+  ublock = extension_dict {name = "ublock-origin";};
+  privacy_badger = extension_dict {name = "privacy-badger17";};
+  bitwarden = extension_dict {name = "bitwarden-password-manager";};
+  language_tool = extension_dict {name = "languagetool";};
+  consent_o_matic = extension_dict {name = "consent-o-matic";};
+  dark_reader = extension_dict {name = "darkreader";};
+  dearrow = extension_dict {name = "dearrow";};
+  enhancer_for_youtube = extension_dict {name = "enhancer-for-youtube";};
+  pocket_tube = extension_dict {name = "youtube-subscription-groups";};
+  return_youtube_dislike = extension_dict {name = "return-youtube-dislikes";};
+  web_archives = extension_dict {name = "view-page-archives";};
+  sponsor_block_youtube = extension_dict {name = "sponsorblock";};
+  sidebery = extension_dict {name = "sidebery";};
+  vimium-c = extension_dict {name = "vimium-c";};
+  nook = extension_dict {name = "nook";};
+  animalese_typing = extension_dict {name = "animalese-typing";};
 
   firefox-extensions = {
-
-    "*".installation_mode =
-      "blocked"; # blocks all addons except the ones specified below
+    "*".installation_mode = "blocked"; # blocks all addons except the ones specified below
     # uBlock Origin:
     "uBlock0@raymondhill.net" = ublock;
     # Privacy Badger:
@@ -69,7 +65,6 @@ let
     #   install_url = ;
     #   installation_mode = "force_installed";
     # };
-  
   };
 
   firefox-about-config = {
@@ -137,12 +132,11 @@ let
     Preferences = firefox-about-config;
     ExtensionSettings = firefox-extensions;
   };
-in 
-{
+in {
   programs.firefox = {
     # package = pkgs.firefox-unwrapped;
     enable = true;
-    languagePacks = [ "fr" "en-US" ];
+    languagePacks = ["fr" "en-US"];
     policies = firefox-policies;
     package = pkgs.librewolf;
   };

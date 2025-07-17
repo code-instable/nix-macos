@@ -1,5 +1,4 @@
-{...}:
-let
+{...}: let
   # ⓘ cli apps and libraries
   brew = [
     {name = "openjdk";}
@@ -19,7 +18,7 @@ let
     #   # restart_service = "changed";
     #   # ⓘ then run : 'brew services start autokbisw'
     #   start_service = true;
-    # }    
+    # }
     # {name="fancy-cat";}
   ];
   # ⓘ gui apps
@@ -31,7 +30,7 @@ let
     "betterdisplay"
     "amethyst"
     "marta"
-    "kitty"          
+    "kitty"
     "skim"
     "github" # github desktop
     "keyboardcleantool"
@@ -44,12 +43,11 @@ let
   ];
   # ⓘ App Store apps
   mas = {
-      "Goodnotes" = 1444383602;    # note taking / viewing
-      "XCode" = 497799835;         # required for ohueter/tap/autokbisw
-      "TestFlight" = 899247664;    # beta tester
+    "Goodnotes" = 1444383602; # note taking / viewing
+    "XCode" = 497799835; # required for ohueter/tap/autokbisw
+    "TestFlight" = 899247664; # beta tester
   };
-in
-{
+in {
   homebrew = {
     enable = true; # needs `system.primaryUser` — to apply user-level settings from root (darwin-rebuild)
 
@@ -65,7 +63,7 @@ in
 
     casks = cask;
     # ⓘ App Store apps
-    #   mas search Goodnotes 
+    #   mas search Goodnotes
     masApps = mas;
     # ⓘ remove non used packages (apps, dependencies)
     onActivation.cleanup = "zap";
