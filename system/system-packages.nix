@@ -1,5 +1,9 @@
-{ pkgs, inputs, lib, ... }:
-let
+{
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: let
   libs = with pkgs; [
     pandoc # pdf/html generation
     pinentry-tty # for rbw bitwarden tool (dependency)
@@ -31,7 +35,7 @@ let
     # scriptisto          # run scripts in any language
     micromamba # faster conda
     pkg-config # compiling flags generator (for libraries)
-    luarocks              # lua package manager
+    luarocks # lua package manager
     pnpm # faster npm
     lua5_4 # https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/interpreters/lua-5/default.nix
     # https://www.lua.org/versions.html#5.4
@@ -94,9 +98,10 @@ let
   ];
 
   __python = with pkgs; [
-    (python313.withPackages(pypkgs: with pypkgs ; [
-      # radian
-    ]))
+    (python313.withPackages (pypkgs:
+      with pypkgs; [
+        # radian
+      ]))
   ];
 
   __nushell-plugins = with pkgs.nushellPlugins; [
@@ -109,12 +114,14 @@ let
     polars
   ];
 
-  __cli-tools-shell = with pkgs; [
-    zinit # zsh plugin manager
-    nushell # data processing within cli
-    zellij # terminal multiplexer
-    zjstatus
-  ] ++ __nushell-plugins;
+  __cli-tools-shell = with pkgs;
+    [
+      zinit # zsh plugin manager
+      nushell # data processing within cli
+      zellij # terminal multiplexer
+      zjstatus
+    ]
+    ++ __nushell-plugins;
 
   __cli-tools-general_purpose = with pkgs; [
     ripgrep # better grep
@@ -143,7 +150,7 @@ let
   __cli-tools-apps = with pkgs; [
     numi # simple calculator within cli, and app
     inputs.yt-x.packages."${system}".default # https://github.com/Benexl/yt-x
-    inputs.todo.defaultPackage.${system}     # https://github.com/sioodmy/todo
+    inputs.todo.defaultPackage.${system} # https://github.com/sioodmy/todo
     inputs.presenterm.packages.${system}.default # https://github.com/mfontanini/presenterm
     newsraft
     yt-dlp
@@ -186,7 +193,7 @@ let
     #                       `rbw get [entry] --ignorecase --raw` (for json)
     #                       `rbw get [entry] --ignorecase --clipboard`
     passh # pass-in password to command : used with rbw to login (website)
-    # rofi-rbw 
+    # rofi-rbw
   ];
 
   cli-tools = with pkgs;
@@ -194,8 +201,13 @@ let
       # ⓘ one off command :
       # nix-shell -p vivid --run "vivid generate snazzy > ~/Github/TerminalConfig/zenful-zsh/.custom/style/vivid-snazzy-ls"
       # vivid               # Generate LS_COLORS
-    ] ++ __cli-tools-bat ++ __cli-tools-files ++ __cli-tools-passwords
-    ++ __cli-tools-apps ++ __cli-tools-img ++ __cli-tools-general_purpose
+    ]
+    ++ __cli-tools-bat
+    ++ __cli-tools-files
+    ++ __cli-tools-passwords
+    ++ __cli-tools-apps
+    ++ __cli-tools-img
+    ++ __cli-tools-general_purpose
     ++ __cli-tools-shell ++ __cli-tools-dev ++ __cli-tools-emails ++ __yazi-plugins;
 
   lsp = with pkgs; [
@@ -205,7 +217,10 @@ let
     bibtex-tidy # formatter
     # ⓘ Nix
     nixd # nix language server
-    nixfmt # nix formatter
+    # nixfmt # nix formatter
+    alejandra
+    deadnix
+    statix
     direnv
     nix-direnv
     nix-direnv-flakes
@@ -267,6 +282,7 @@ let
     mpv # alternative to vlc
     obsidian
     wezterm
+    blender
     # dorion
     # 🚧 USE HOMEBREW
     # calibre
@@ -276,12 +292,11 @@ let
     # skimpdf
   ];
 
-  fonts = with pkgs;
-    [
-      # nerdfonts             # fonts with icons
-      # now nerdfonts are separated in individual packages :
-      nerd-fonts.jetbrains-mono
-    ];
+  fonts = with pkgs; [
+    # nerdfonts             # fonts with icons
+    # now nerdfonts are separated in individual packages :
+    nerd-fonts.jetbrains-mono
+  ];
 
   # language specific packages
   lua_pkgs = with pkgs; [
@@ -296,23 +311,27 @@ let
   ];
 
   # &⟩ gather all packages, and differentiate between linux and macos
-  system-pkgs = libs ++ devTools ++ cli-tools ++ editors ++ dailyUseApps
+  system-pkgs =
+    libs
+    ++ devTools
+    ++ cli-tools
+    ++ editors
+    ++ dailyUseApps
     ++ fonts ++ lsp ++ lua_pkgs ++ __python;
 
-  unfree_packages = pkg: builtins.elem (lib.getName pkg) [
-    "dorion"
-    "numi"
-    "vscode"
-    "aldente"
-    "bartender"
-    "raycast"
-    "spotify"
-    "discord"
-    "obsidian"
-  ];
-  
+  unfree_packages = pkg:
+    builtins.elem (lib.getName pkg) [
+      "dorion"
+      "numi"
+      "vscode"
+      "aldente"
+      "bartender"
+      "raycast"
+      "spotify"
+      "discord"
+      "obsidian"
+    ];
 in {
-
   imports = [
     ./R.nix
   ];
@@ -324,20 +343,20 @@ in {
   environment.systemPackages = system-pkgs;
 
   environment.etc."zellij-plugins-paths.yml".text = ''
-  zjstatus:
-    path: ${pkgs.zjstatus}/bin/zjstatus.wasm
+    zjstatus:
+      path: ${pkgs.zjstatus}/bin/zjstatus.wasm
   '';
-  
+
   # generate a yaml for the path of the plugins
   environment.etc."nushell-plugins-paths.yml".text = ''
-  ${
-    lib.concatStringsSep "\n" (map (plugin: "${plugin.meta.mainProgram}:\n\t- path: ${plugin}/bin/${plugin.meta.mainProgram}") __nushell-plugins)
-  }  
+    ${
+      lib.concatStringsSep "\n" (map (plugin: "${plugin.meta.mainProgram}:\n\t- path: ${plugin}/bin/${plugin.meta.mainProgram}") __nushell-plugins)
+    }
   '';
 
   environment.etc."nushell-plugins-paths.nu".text = ''
-  ${
-    lib.concatStringsSep "\n" (map (plugin: "plugin add ${plugin}/bin/${plugin.meta.mainProgram}") __nushell-plugins)
-  }  
+    ${
+      lib.concatStringsSep "\n" (map (plugin: "plugin add ${plugin}/bin/${plugin.meta.mainProgram}") __nushell-plugins)
+    }
   '';
 }
